@@ -4,8 +4,6 @@ from jina import (
     Flow,
 )
 
-import pretty_errors
-
 from helper import input_docs, plot_search_results
 from config import DATA_DIR, DEVICE, WORKSPACE_DIR, search_terms
 
