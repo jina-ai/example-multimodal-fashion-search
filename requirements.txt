@@ -1,0 +1,3 @@
+jina==2.6.2
+Pillow
+matplotlib
