@@ -1,17 +1,10 @@
-from jina import (
-    Document,
-    DocumentArray,
-    Flow,
-)
-
-from helper import input_docs, input_docs_from_csv
-from config import DATA_DIR, DEVICE, MAX_DOCS, WORKSPACE_DIR, search_terms, PORT, CSV_FILE
+from jina import Flow
+from helper import input_docs_from_csv
+from config import DEVICE, MAX_DOCS, WORKSPACE_DIR, PORT, CSV_FILE
 import click
 
 
-# def index(data_dir=DATA_DIR, max_docs=MAX_DOCS):
 def index(csv_file=CSV_FILE, max_docs=MAX_DOCS):
-    # docs = input_docs(data_path=data_dir, max_docs=max_docs)
     docs = input_docs_from_csv(file_path=csv_file, max_docs=max_docs)
 
     flow_index = (
@@ -34,7 +27,7 @@ def index(csv_file=CSV_FILE, max_docs=MAX_DOCS):
     )
 
     with flow_index:
-        flow_index.index(inputs=docs)
+        flow_index.index(inputs=docs, show_progress=True)
 
 
 def search():
@@ -57,19 +50,6 @@ def search():
         )
     )
 
-    # grpc
-    # with flow_search:
-        # docs = DocumentArray()
-        # for term in search_terms:
-            # doc = Document(text=term)
-            # docs.append(doc)
-
-        # resp = flow_search.search(
-            # inputs=docs,
-            # on_done=plot_search_results,
-        # )
-
-    # RESTful
     with flow_search:
         flow_search.port_expose = PORT
         flow_search.protocol = "http"
@@ -84,7 +64,7 @@ def search():
 )
 @click.option("--num_docs", "-n", default=MAX_DOCS)
 @click.option("--force", "-f", is_flag=True)
-def main(task: str, num_docs: int, force: bool):
+def main(task: str, num_docs: int):
     if task == "index":
         index(max_docs=num_docs)
     elif task == "search":
