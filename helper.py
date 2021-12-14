@@ -31,10 +31,13 @@ def input_docs_from_csv(file_path, max_docs):
         reader = csv.DictReader(file)
 
         for row in islice(reader, max_docs):
-            filename = f"{DATA_DIR}/{row['id']}.jpg"
-            doc = Document(uri=filename, tags=row)
-            doc.load_uri_to_image_blob()
-            docs.append(doc)
+            try: # To skip malformed rows
+                filename = f"{DATA_DIR}/{row['id']}.jpg"
+                doc = Document(uri=filename, tags=row)
+                doc.load_uri_to_image_blob()
+                docs.append(doc)
+            except:
+                pass
 
     return docs
 
