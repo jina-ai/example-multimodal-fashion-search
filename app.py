@@ -4,13 +4,15 @@ from jina import (
     Flow,
 )
 
-from helper import input_docs, plot_search_results
-from config import DATA_DIR, DEVICE, MAX_DOCS, WORKSPACE_DIR, search_terms, PORT
+from helper import input_docs, input_docs_from_csv
+from config import DATA_DIR, DEVICE, MAX_DOCS, WORKSPACE_DIR, search_terms, PORT, CSV_FILE
 import click
 
 
-def index(data_dir=DATA_DIR, max_docs=MAX_DOCS):
-    docs = input_docs(data_path=data_dir, max_docs=max_docs)
+# def index(data_dir=DATA_DIR, max_docs=MAX_DOCS):
+def index(csv_file=CSV_FILE, max_docs=MAX_DOCS):
+    # docs = input_docs(data_path=data_dir, max_docs=max_docs)
+    docs = input_docs_from_csv(file_path=csv_file, max_docs=max_docs)
 
     flow_index = (
         Flow()
