@@ -5,11 +5,12 @@ from jina import (
 )
 
 from helper import input_docs, plot_search_results
-from config import DATA_DIR, DEVICE, WORKSPACE_DIR, search_terms
+from config import DATA_DIR, DEVICE, MAX_DOCS, WORKSPACE_DIR, search_terms, PORT
+import click
 
 
-def index():
-    docs = input_docs(DATA_DIR)
+def index(data_dir=DATA_DIR, max_docs=MAX_DOCS):
+    docs = input_docs(data_path=data_dir, max_docs=max_docs)
 
     flow_index = (
         Flow()
@@ -31,7 +32,7 @@ def index():
     )
 
     with flow_index:
-        flow_index.index(inputs=docs, request_size=1)
+        flow_index.index(inputs=docs)
 
 
 def search():
@@ -54,17 +55,39 @@ def search():
         )
     )
 
+    # grpc
+    # with flow_search:
+        # docs = DocumentArray()
+        # for term in search_terms:
+            # doc = Document(text=term)
+            # docs.append(doc)
+
+        # resp = flow_search.search(
+            # inputs=docs,
+            # on_done=plot_search_results,
+        # )
+
+    # RESTful
     with flow_search:
-        docs = DocumentArray()
-        for term in search_terms:
-            doc = Document(text=term)
-            docs.append(doc)
-
-        resp = flow_search.search(
-            inputs=docs,
-            on_done=plot_search_results,
-        )
+        flow_search.port_expose = PORT
+        flow_search.protocol = "http"
+        flow_search.block()
 
 
-index()
-search()
+@click.command()
+@click.option(
+    "--task",
+    "-t",
+    type=click.Choice(["index", "search"], case_sensitive=False),
+)
+@click.option("--num_docs", "-n", default=MAX_DOCS)
+@click.option("--force", "-f", is_flag=True)
+def main(task: str, num_docs: int, force: bool):
+    if task == "index":
+        index(max_docs=num_docs)
+    elif task == "search":
+        search()
+
+
+if __name__ == "__main__":
+    main()
