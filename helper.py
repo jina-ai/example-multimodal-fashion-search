@@ -32,7 +32,7 @@ def show_docs(docs):
 
 def get_matches(input, server=SERVER, port=PORT, max_docs=20):
     client = Client(host=SERVER, protocol="http", port=PORT)
-    response = client.search(Document(text="foo"), return_results=True)
+    response = client.search(Document(text=input), return_results=True)
     matches = response[0].docs[0].matches
 
     return matches
