@@ -10,6 +10,10 @@ def index(csv_file=CSV_FILE, max_docs=MAX_DOCS):
     flow_index = (
         Flow()
         .add(
+            uses="jinahub+docker://DocCache", 
+            name="deduplicator"
+        )
+        .add(
             uses="jinahub+docker://CLIPImageEncoder",
             name="image_encoder",
             uses_with={"device": DEVICE},
@@ -63,7 +67,6 @@ def search():
     type=click.Choice(["index", "search"], case_sensitive=False),
 )
 @click.option("--num_docs", "-n", default=MAX_DOCS)
-@click.option("--force", "-f", is_flag=True)
 def main(task: str, num_docs: int):
     if task == "index":
         index(max_docs=num_docs)
