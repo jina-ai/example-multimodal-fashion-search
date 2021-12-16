@@ -9,6 +9,9 @@ st.set_page_config(page_title=title, layout="wide")
 # Sidebar
 st.sidebar.title("Options")
 limit = st.sidebar.slider(label="Maximum results", min_value=int(TOP_K/3), max_value=TOP_K*3, value=TOP_K)
+# year = st.sidebar.selectbox("Year", [2007, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016])
+year = st.sidebar.selectbox("Year", reversed(range(2007, 2017)))
+season = st.sidebar.selectbox("Season", ['Summer', 'Fall', 'Winter', 'Spring'])
 # use_hi_res = st.sidebar.checkbox(label="Show hi-res images") # WIP
 
 st.sidebar.title("About")
@@ -34,7 +37,7 @@ query = st.text_input(label="Search term", placeholder="Blue dress")
 search_button = st.button("Search")
 
 if search_button:
-    matches = get_matches(input=query, limit=limit)
+    matches = get_matches(input=query, limit=limit, filters={"year": year, "season": season})
 
 if "matches" in locals():
     for match in matches:
@@ -45,7 +48,7 @@ if "matches" in locals():
         # pic_cell.image(match.uri, use_column_width="auto")
         pic_cell.image(image, use_column_width="auto")
         desc_cell.markdown(f"##### {match.tags['productDisplayName']}")
-        desc_cell.markdown(f"*{match.tags['masterCategory']}*, *{match.tags['subCategory']}*, *{match.tags['articleType']}*, *{match.tags['baseColour']}*, *{match.tags['season']}*, *{match.tags['usage']}*")
+        desc_cell.markdown(f"*{match.tags['masterCategory']}*, *{match.tags['subCategory']}*, *{match.tags['articleType']}*, *{match.tags['baseColour']}*, *{match.tags['season']}*, *{match.tags['usage']}*, *{match.tags['year']}*")
         price_cell.button(key=match.tags['id'], label=generate_price())
 
     # This is old way of showing results. Prettier but can't take number of results in account

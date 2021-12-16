@@ -1,6 +1,6 @@
 from jina import Flow
 from helper import input_docs_from_csv
-from config import DEVICE, MAX_DOCS, WORKSPACE_DIR, PORT, CSV_FILE
+from config import DEVICE, MAX_DOCS, WORKSPACE_DIR, PORT, CSV_FILE, COLUMNS, DIMS
 import click
 
 
@@ -19,12 +19,17 @@ def index(csv_file=CSV_FILE, max_docs=MAX_DOCS):
             uses_with={"device": DEVICE},
         )
         .add(
-            uses="jinahub+docker://SimpleIndexer",
+            uses="jinahub://PQLiteIndexer",
             name="indexer",
-            workspace="workspace",
-            uses_with={"index_file_name": "index"},
+            uses_with={
+                'dim': DIMS,
+                'columns': COLUMNS,
+                'metric': "cosine",
+                'include_metadata': True
+            },
             uses_metas={"workspace": WORKSPACE_DIR},
             volumes=f"./{WORKSPACE_DIR}:/workspace/workspace",
+            install_requirements=True
         )
     )
 
@@ -42,13 +47,17 @@ def search():
             install_requirements=True,
         )
         .add(
-            uses="jinahub+docker://SimpleIndexer",
+            uses="jinahub://PQLiteIndexer",
             name="indexer",
-            workspace="workspace",
-            uses_with={"index_file_name": "index"},
+            uses_with={
+                'dim': DIMS,
+                'columns': COLUMNS,
+                'metric': "cosine",
+                'include_metadata': True
+            },
             uses_metas={"workspace": WORKSPACE_DIR},
             volumes=f"./{WORKSPACE_DIR}:/workspace/workspace",
-            install_requirements=True,
+            install_requirements=True
         )
     )
 

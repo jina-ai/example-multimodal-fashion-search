@@ -5,6 +5,19 @@ MAX_DOCS = 100
 WORKSPACE_DIR = "workspace"
 DEVICE = "cpu"
 
+# PQLiteIndexer
+COLUMNS = [
+    ("gender", "str"),
+    ("masterCategory", "str"),
+    ("subCategory", "str"),
+    ("articleType", "str"),
+    ("baseColour", "str"),
+    ("season", "str"),
+    ("usage", "str"),
+    ("year", "int"),
+]
+DIMS = 512 # This should be same shape as vector embedding
+
 # searching via gRPC
 search_terms = ("Dress", "Shirt", "Shoe")
 
