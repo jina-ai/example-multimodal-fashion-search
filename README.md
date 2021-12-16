@@ -1,3 +1,12 @@
+# Multimodal Fashion Search with Jina
+
+![](./demo.gif)
+
+Multimodal search lets you use one type of data (in this case, text) to search another type of data (in this case, images). This example leverages core Jina technologies that make it simpler to build and run your search, including:
+
+- Executors from [Jina Hub](https://hub.jina.ai), so we don't have to manually integrate deep learning models
+- [Jina Client](https://docs.jina.ai/api/jina.clients/), so we don't have to worry about how best to format the REST request
+
 ## Instructions
 
 1. `pip install -r requirements.txt`
