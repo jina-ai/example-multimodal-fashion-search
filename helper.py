@@ -62,3 +62,13 @@ def generate_price(min=10, max=200, currency="$"):
     price = currency + str(price) + ".00"
 
     return price
+
+def resize_image(filename, resize_factor=2):
+    from PIL import Image
+    image = Image.open(filename)
+    w, h = image.size
+    image = image.resize((w*resize_factor, h*resize_factor), Image.ANTIALIAS)
+
+    return image
+
+

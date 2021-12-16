@@ -1,24 +1,29 @@
 import streamlit as st
-from helper import get_matches, generate_price
-from jina import Client, Document
-from jina.types.request import Response
-from config import PORT, SERVER, TOP_K
+from helper import get_matches, generate_price, resize_image
+from config import TOP_K, IMAGE_RESIZE_FACTOR
 
 title = "👕 Multimodal fashion search with Jina"
 
 st.set_page_config(page_title=title, layout="wide")
 
 # Sidebar
+st.sidebar.title("Options")
+limit = st.sidebar.slider(label="Maximum results", min_value=int(TOP_K/3), max_value=TOP_K*3, value=TOP_K)
+# use_hi_res = st.sidebar.checkbox(label="Show hi-res images") # WIP
+
 st.sidebar.title("About")
-st.sidebar.markdown("""This example lets you use a *textual* description to search through *images* of fashion items using [Jina](https://github.com/jina-ai/jina/)
+
+st.sidebar.markdown("""This example lets you use a *textual* description to search through *images* of fashion items using [Jina](https://github.com/jina-ai/jina/).
 
 #### Why does the price change each time?
 
-The dataset doesn't provide pricing info, so it's randomly generated from the frontend on each search""")
+The dataset doesn't provide pricing info, so it's randomly generated from the frontend on each search
 
-st.sidebar.title("Options")
-limit = st.sidebar.slider(label="Results", min_value=int(TOP_K/3), max_value=TOP_K*3, value=TOP_K)
-# use_hi_res = st.sidebar.checkbox(label="Show hi-res images") # WIP
+#### Why are the images so pixelated?
+
+To speed up indexing, we indexed relatively low-resolution graphics. We're looking at hosting hi-res images elsewhere and showing those instead. But for the purposes of a tech demo it seems like overkill.
+
+""")
 
 st.sidebar.markdown("[Repo link](https://github.com/alexcg1/jina-multimodal-fashion-search)")
 
@@ -34,7 +39,11 @@ if search_button:
 if "matches" in locals():
     for match in matches:
         pic_cell, desc_cell, price_cell = st.columns([1,6,1])
-        pic_cell.image(match.uri, use_column_width="auto", width=400)
+
+        image = resize_image(match.uri, resize_factor=IMAGE_RESIZE_FACTOR)
+
+        # pic_cell.image(match.uri, use_column_width="auto")
+        pic_cell.image(image, use_column_width="auto")
         desc_cell.markdown(f"##### {match.tags['productDisplayName']}")
         desc_cell.markdown(f"*{match.tags['masterCategory']}*, *{match.tags['subCategory']}*, *{match.tags['articleType']}*, *{match.tags['baseColour']}*, *{match.tags['season']}*, *{match.tags['usage']}*")
         price_cell.button(key=match.tags['id'], label=generate_price())
