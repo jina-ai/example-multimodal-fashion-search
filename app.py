@@ -17,7 +17,6 @@ def index(csv_file=CSV_FILE, max_docs=MAX_DOCS):
             uses="jinahub+docker://CLIPImageEncoder",
             name="image_encoder",
             uses_with={"device": DEVICE},
-            install_requirements=True,
         )
         .add(
             uses="jinahub+docker://SimpleIndexer",
@@ -26,7 +25,6 @@ def index(csv_file=CSV_FILE, max_docs=MAX_DOCS):
             uses_with={"index_file_name": "index"},
             uses_metas={"workspace": WORKSPACE_DIR},
             volumes=f"./{WORKSPACE_DIR}:/workspace/workspace",
-            install_requirements=True,
         )
     )
 
