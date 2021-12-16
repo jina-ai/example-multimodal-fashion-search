@@ -1,7 +1,6 @@
 import glob
 import os
 from docarray.array.document import DocumentArray
-import matplotlib.pyplot as plt
 from jina.types.request import Request
 from config import MAX_DOCS, SERVER, PORT, DATA_DIR
 from jina import Client, Document
