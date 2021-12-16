@@ -11,3 +11,6 @@ search_terms = ("Dress", "Shirt", "Shoe")
 # serving via REST
 SERVER = "0.0.0.0" # remove http://
 PORT = 12345
+
+# client
+TOP_K = 10

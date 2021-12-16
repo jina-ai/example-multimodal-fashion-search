@@ -49,9 +49,16 @@ def show_docs(docs):
 
 # Client
 
-def get_matches(input, server=SERVER, port=PORT, max_docs=20):
-    client = Client(host=SERVER, protocol="http", port=PORT)
-    response = client.search(Document(text=input), return_results=True)
+def get_matches(input, server=SERVER, port=PORT, limit=MAX_DOCS):
+    client = Client(host=server, protocol="http", port=port)
+    response = client.search(Document(text=input), return_results=True, parameters={"limit": limit}, show_progress=True)
     matches = response[0].docs[0].matches
 
     return matches
+
+def generate_price(min=10, max=200, currency="$"):
+    from random import randrange
+    price = randrange(min, max)
+    price = currency + str(price) + ".00"
+
+    return price
