@@ -1,6 +1,6 @@
 from jina import Flow
 from helper import input_docs_from_csv, get_columns
-from config import DEVICE, MAX_DOCS, WORKSPACE_DIR, PORT, CSV_FILE, COLUMNS, DIMS
+from config import DEVICE, MAX_DOCS, WORKSPACE_DIR, PORT, CSV_FILE, DIMS
 import click
 import pickle
 import sys
