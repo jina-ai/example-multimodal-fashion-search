@@ -4,17 +4,15 @@ from docarray.array.document import DocumentArray
 from jina.types.request import Request
 from config import MAX_DOCS, SERVER, PORT, DATA_DIR
 from jina import Client, Document
+import random
 
 search_terms = ("Dress", "Shirt", "Shoe")
 
 # Server
+def generate_price(minimum=10, maximum=200):
+    price = random.randrange(minimum, maximum)
 
-
-def input_docs(data_path, max_docs):
-    for fn in glob.glob(os.path.join(data_path, "*"))[:MAX_DOCS]:
-        doc = Document(uri=fn, tags={"filename": fn})
-        doc.load_uri_to_image_blob()
-        yield doc
+    return price
 
 
 def input_docs_from_csv(file_path, max_docs):
@@ -29,13 +27,19 @@ def input_docs_from_csv(file_path, max_docs):
             try:  # To skip malformed rows
                 filename = f"{DATA_DIR}/{row['id']}.jpg"
                 doc = Document(uri=filename, tags=row)
-                doc.tags['price'] = generate_price() # Generate fake price
+                # random.seed(int(doc.tags['id'])) # Ensure reproducability
+
+                # Generate useful data that's missing
+                doc.tags["price"] = generate_price()  # Generate fake price
+                doc.tags["rating"] = random.randrange(0, 5)
+
                 doc.load_uri_to_image_blob()
                 docs.append(doc)
             except:
                 pass
 
     return docs
+
 
 def get_columns(document):
     """
@@ -48,7 +52,7 @@ def get_columns(document):
 
     for field, value in zip(names, types):
         try:
-            value = int(value) # Handle year better
+            value = int(value)  # Handle year better
         except:
             pass
 
@@ -57,10 +61,11 @@ def get_columns(document):
         elif isinstance(value, int):
             value = "int"
 
-        col  = (field, value)
+        col = (field, value)
         columns.append(col)
 
     return columns
+
 
 # Client
 
@@ -70,9 +75,7 @@ def get_matches(input, server=SERVER, port=PORT, limit=MAX_DOCS, filters=None):
     response = client.search(
         Document(text=input),
         return_results=True,
-        parameters={
-            "limit": limit,
-            "filter": filters},
+        parameters={"limit": limit, "filter": filters},
         show_progress=True,
     )
     matches = response[0].docs[0].matches
@@ -84,12 +87,14 @@ def get_matches(input, server=SERVER, port=PORT, limit=MAX_DOCS, filters=None):
     return matches
 
 
-def generate_price(minimum=10, maximum=200):
-    from random import randrange
+def print_stars(rating, maximum=5):
+    rating = int(rating)
+    positive = "★"
+    negative = "☆"
 
-    price = randrange(minimum, maximum)
+    string = rating * positive + (maximum - rating) * negative
 
-    return price
+    return string
 
 
 def resize_image(filename, resize_factor=2):
