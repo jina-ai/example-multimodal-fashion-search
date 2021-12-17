@@ -1,11 +1,15 @@
 from jina import Flow
-from helper import input_docs_from_csv
+from helper import input_docs_from_csv, get_columns
 from config import DEVICE, MAX_DOCS, WORKSPACE_DIR, PORT, CSV_FILE, COLUMNS, DIMS
 import click
-
+import pickle
+import sys
 
 def index(csv_file=CSV_FILE, max_docs=MAX_DOCS):
     docs = input_docs_from_csv(file_path=csv_file, max_docs=max_docs)
+
+    columns = get_columns(docs[0]) # Get all the column info from first doc
+    pickle.dump(columns, open("columns.p", "wb")) # Pickle values so search fn can pick up later
 
     flow_index = (
         Flow()
@@ -23,7 +27,8 @@ def index(csv_file=CSV_FILE, max_docs=MAX_DOCS):
             name="indexer",
             uses_with={
                 'dim': DIMS,
-                'columns': COLUMNS,
+                'columns': columns,
+                # 'columns': COLUMNS,
                 'metric': "cosine",
                 'include_metadata': True
             },
@@ -38,6 +43,7 @@ def index(csv_file=CSV_FILE, max_docs=MAX_DOCS):
 
 
 def search():
+    columns = pickle.load(open("columns.p", "rb"))
     flow_search = (
         Flow()
         .add(
@@ -51,7 +57,7 @@ def search():
             name="indexer",
             uses_with={
                 'dim': DIMS,
-                'columns': COLUMNS,
+                'columns': columns,
                 'metric': "cosine",
                 'include_metadata': True
             },
