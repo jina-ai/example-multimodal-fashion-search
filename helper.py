@@ -29,6 +29,7 @@ def input_docs_from_csv(file_path, max_docs):
             try:  # To skip malformed rows
                 filename = f"{DATA_DIR}/{row['id']}.jpg"
                 doc = Document(uri=filename, tags=row)
+                doc.tags['price'] = generate_price() # Generate fake price
                 doc.load_uri_to_image_blob()
                 docs.append(doc)
             except:
@@ -36,6 +37,30 @@ def input_docs_from_csv(file_path, max_docs):
 
     return docs
 
+def get_columns(document):
+    """
+    Return a list of tuples, each tuple containing column name and type
+    """
+    tags = document.tags.to_dict()
+    names = list(tags.keys())
+    types = list(tags.values())
+    columns = []
+
+    for field, value in zip(names, types):
+        try:
+            value = int(value) # Handle year better
+        except:
+            pass
+
+        if isinstance(value, str):
+            value = "str"
+        elif isinstance(value, int):
+            value = "int"
+
+        col  = (field, value)
+        columns.append(col)
+
+    return columns
 
 # Client
 
@@ -47,11 +72,7 @@ def get_matches(input, server=SERVER, port=PORT, limit=MAX_DOCS, filters=None):
         return_results=True,
         parameters={
             "limit": limit,
-            "filter": {
-                "year": {"$eq": filters["year"]},
-                "season": {"$eq": filters["season"]},
-            },
-        },
+            "filter": filters},
         show_progress=True,
     )
     matches = response[0].docs[0].matches
@@ -63,11 +84,10 @@ def get_matches(input, server=SERVER, port=PORT, limit=MAX_DOCS, filters=None):
     return matches
 
 
-def generate_price(min=10, max=200, currency="$"):
+def generate_price(minimum=10, maximum=200):
     from random import randrange
 
-    price = randrange(min, max)
-    price = currency + str(price) + ".00"
+    price = randrange(minimum, maximum)
 
     return price
 
