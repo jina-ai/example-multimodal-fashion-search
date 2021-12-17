@@ -1,5 +1,5 @@
 import streamlit as st
-from helper import get_matches, generate_price, resize_image, process_filters
+from helper import get_matches, resize_image
 from config import TOP_K, IMAGE_RESIZE_FACTOR
 
 filters = {"$and": {"year": {}, "price": {}}}
