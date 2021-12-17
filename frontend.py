@@ -1,8 +1,8 @@
 import streamlit as st
-from helper import get_matches, resize_image
+from helper import get_matches, resize_image, print_stars
 from config import TOP_K, IMAGE_RESIZE_FACTOR
 
-filters = {"$and": {"year": {}, "price": {}}}
+filters = {"$and": {"year": {}, "price": {}, "rating": {}}}
 
 title = "👕 Multimodal fashion search with Jina"
 
@@ -20,6 +20,7 @@ limit = st.sidebar.slider(
     filters["$and"]["price"]["$gte"],
     filters["$and"]["price"]["$lte"],
 ) = st.sidebar.slider("Price", 0, 200, (0, 200))
+filters["$and"]["rating"]["$gte"] = st.sidebar.slider("Minimum rating", 0, 5, 3)
 print(filters)
 # season = st.sidebar.selectbox("Season", ["Summer", "Fall", "Winter", "Spring"])
 # use_hi_res = st.sidebar.checkbox(label="Show hi-res images") # WIP
@@ -64,6 +65,8 @@ if "matches" in locals():
         # pic_cell.image(match.uri, use_column_width="auto")
         pic_cell.image(image, use_column_width="auto")
         desc_cell.markdown(f"##### {match.tags['productDisplayName']}")
+        desc_cell.markdown(f"##### {print_stars(match.tags['rating'])}")
+        # desc_cell.text(int(match.tags['rating'])*"⭐")
         desc_cell.markdown(
             f"*{match.tags['masterCategory']}*, *{match.tags['subCategory']}*, *{match.tags['articleType']}*, *{match.tags['baseColour']}*, *{match.tags['season']}*, *{match.tags['usage']}*, *{match.tags['year']}*"
         )
