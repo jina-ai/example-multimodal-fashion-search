@@ -1,2 +1,3 @@
 Pillow
 streamlit==1.2.0
+jina[client]==2.6.2
