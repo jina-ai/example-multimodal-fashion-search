@@ -9,8 +9,8 @@ filter = {
         "year": {"$gte": 2011, "$lte": 2014},
         "price": {"$gte": 100, "$lte": 200},
         "rating": {"$gte": 3},
-        # "baseColour": {"$one_of": ['White', 'Blue', 'Black']},
-        # "season": {"$all_of": ['Summer', 'Spring', 'Fall']},
+        "baseColour": {"$one_of": ['White', 'Blue', 'Black']},
+        "season": {"$all_of": ['Summer', 'Spring', 'Fall']},
     },
 }
 

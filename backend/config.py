@@ -1,6 +1,6 @@
 # indexing data
-CSV_FILE = "./data/styles.csv"
-DATA_DIR = "./data/images"
+CSV_FILE = "../data/styles.csv"
+DATA_DIR = "../data/images"
 MAX_DOCS = 100
 WORKSPACE_DIR = "workspace"
 DEVICE = "cpu"
@@ -24,7 +24,3 @@ search_terms = ("Dress", "Shirt", "Shoe")
 # serving via REST
 SERVER = "0.0.0.0" # remove http://
 PORT = 12345
-
-# client
-TOP_K = 10
-IMAGE_RESIZE_FACTOR = 3

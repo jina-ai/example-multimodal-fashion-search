@@ -1,6 +1,6 @@
 import streamlit as st
 from helper import get_matches, resize_image, print_stars
-from config import TOP_K, IMAGE_RESIZE_FACTOR
+from config import TOP_K, IMAGE_RESIZE_FACTOR, SERVER, PORT
 
 filters = {"$and": {"year": {}, "price": {}, "rating": {}}}
 
@@ -10,9 +10,11 @@ st.set_page_config(page_title=title, layout="wide")
 
 # Sidebar
 st.sidebar.title("Options")
+
 limit = st.sidebar.slider(
     label="Maximum results", min_value=int(TOP_K / 3), max_value=TOP_K * 3, value=TOP_K
 )
+
 (filters["$and"]["year"]["$gte"], filters["$and"]["year"]["$lte"]) = st.sidebar.slider(
     "Year", 2007, 2019, (2007, 2019)
 )
@@ -21,7 +23,13 @@ limit = st.sidebar.slider(
     filters["$and"]["price"]["$lte"],
 ) = st.sidebar.slider("Price", 0, 200, (0, 200))
 filters["$and"]["rating"]["$gte"] = st.sidebar.slider("Minimum rating", 0, 5, 3)
-print(filters)
+
+with st.sidebar.expander("Debug"):
+    server = st.text_input(label="Server", value=SERVER)
+    port = st.text_input(label="Port", value=PORT)
+
+
+
 # season = st.sidebar.selectbox("Season", ["Summer", "Fall", "Winter", "Spring"])
 # use_hi_res = st.sidebar.checkbox(label="Show hi-res images") # WIP
 
@@ -52,9 +60,7 @@ query = st.text_input(label="Search term", placeholder="Blue dress")
 search_button = st.button("Search")
 
 if search_button:
-    matches = get_matches(
-        input=query, limit=limit, filters=filters
-    )
+    matches = get_matches(input=query, limit=limit, filters=filters, server=server, port=port)
 
 if "matches" in locals():
     for match in matches:
@@ -66,8 +72,7 @@ if "matches" in locals():
         pic_cell.image(image, use_column_width="auto")
         desc_cell.markdown(f"##### {match.tags['productDisplayName']}")
         desc_cell.markdown(f"##### {print_stars(match.tags['rating'])}")
-        # desc_cell.text(int(match.tags['rating'])*"⭐")
         desc_cell.markdown(
             f"*{match.tags['masterCategory']}*, *{match.tags['subCategory']}*, *{match.tags['articleType']}*, *{match.tags['baseColour']}*, *{match.tags['season']}*, *{match.tags['usage']}*, *{match.tags['year']}*"
         )
-        price_cell.button(key=match.tags["id"], label=str(match.tags['price']))
+        price_cell.button(key=match.tags["id"], label=str(match.tags["price"]))

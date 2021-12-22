@@ -14,13 +14,15 @@ def index(csv_file=CSV_FILE, max_docs=MAX_DOCS):
     flow_index = (
         Flow()
         .add(
-            uses="jinahub+docker://DocCache", 
-            name="deduplicator"
+            uses="jinahub://DocCache", 
+            name="deduplicator",
+            install_requirements=True
         )
         .add(
-            uses="jinahub+docker://CLIPImageEncoder",
+            uses="jinahub://CLIPImageEncoder",
             name="image_encoder",
             uses_with={"device": DEVICE},
+            install_requirements=True
         )
         .add(
             uses="jinahub://PQLiteIndexer",
@@ -47,7 +49,7 @@ def search():
     flow_search = (
         Flow()
         .add(
-            uses="jinahub+docker://CLIPTextEncoder",
+            uses="jinahub://CLIPTextEncoder",
             name="text_encoder",
             uses_with={"device": DEVICE},
             install_requirements=True,
@@ -69,6 +71,7 @@ def search():
 
     with flow_search:
         flow_search.port_expose = PORT
+        flow_search.cors = True
         flow_search.protocol = "http"
         flow_search.block()
 

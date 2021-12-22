@@ -2,7 +2,7 @@ import glob
 import os
 from docarray.array.document import DocumentArray
 from jina.types.request import Request
-from config import MAX_DOCS, SERVER, PORT, DATA_DIR
+from config import SERVER, PORT, DATA_DIR, TOP_K
 from jina import Client, Document
 import random
 
@@ -70,7 +70,10 @@ def get_columns(document):
 # Client
 
 
-def get_matches(input, server=SERVER, port=PORT, limit=MAX_DOCS, filters=None):
+def get_matches(input, server=SERVER, port=PORT, limit=TOP_K, filters=None):
+    print(server)
+    from pprint import pprint
+    pprint(filters)
     client = Client(host=server, protocol="http", port=port)
     response = client.search(
         Document(text=input),
@@ -79,10 +82,10 @@ def get_matches(input, server=SERVER, port=PORT, limit=MAX_DOCS, filters=None):
         show_progress=True,
     )
     matches = response[0].docs[0].matches
-    for match in matches:
-        print(match.id)
-        print(match.tags["year"])
-        print(match.tags.keys)
+    # for match in matches:
+        # print(match.id)
+        # print(match.tags["year"])
+        # print(match.tags.keys)
 
     return matches
 
