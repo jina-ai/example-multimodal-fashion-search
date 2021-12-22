@@ -4,7 +4,7 @@ services:
   frontend:
     build: frontend
     environment:
-      - BACKEND_SERVER="backend"
+      - BACKEND_SERVER=backend
     ports:
       - 8509:8509
     depends_on:
