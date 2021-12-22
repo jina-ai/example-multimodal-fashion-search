@@ -5,6 +5,7 @@ services:
     build: frontend
     environment:
       - BACKEND_SERVER=backend
+      - DEBUG=False
     ports:
       - 8509:8509
     depends_on:
