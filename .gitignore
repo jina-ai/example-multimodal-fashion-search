@@ -1,5 +1,7 @@
-workspace/*
-data/*
+*/workspace/*
+*/workspaces/*
+*/data/*
+data
 
 ### Created by https://www.gitignore.io
 ### Python ###

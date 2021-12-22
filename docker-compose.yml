@@ -1,0 +1,23 @@
+version: "3.7"
+
+services:
+  frontend:
+    build: frontend
+    environment:
+      - BACKEND_SERVER=backend
+      - DEBUG=False
+    ports:
+      - 8509:8509
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend:/workspace
+      - ./data:/data
+
+  backend:
+    build: backend
+    ports:
+      - 12345:12345
+    volumes:
+      - ./backend:/workspace
+      - ./data:/data
