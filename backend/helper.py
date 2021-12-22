@@ -2,7 +2,7 @@ import glob
 import os
 from docarray.array.document import DocumentArray
 from jina.types.request import Request
-from config import MAX_DOCS, SERVER, PORT, DATA_DIR
+from config import MAX_DOCS, SERVER, PORT, DATA_DIR, CSV_FILE
 from jina import Client, Document
 import random
 
@@ -15,7 +15,7 @@ def generate_price(minimum=10, maximum=200):
     return price
 
 
-def input_docs_from_csv(file_path, max_docs):
+def input_docs_from_csv(file_path=CSV_FILE, max_docs=100, data_dir=DATA_DIR):
     docs = DocumentArray()
     import csv
     from itertools import islice
@@ -25,9 +25,9 @@ def input_docs_from_csv(file_path, max_docs):
 
         for row in islice(reader, max_docs):
             try:  # To skip malformed rows
-                filename = f"{DATA_DIR}/{row['id']}.jpg"
+                filename = f"{data_dir}/{row['id']}.jpg"
                 doc = Document(uri=filename, tags=row)
-                # random.seed(int(doc.tags['id'])) # Ensure reproducability
+                random.seed(int(doc.tags['id'])) # Ensure reproducability
 
                 # Generate useful data that's missing
                 doc.tags["price"] = generate_price()  # Generate fake price
