@@ -1,6 +1,6 @@
 import streamlit as st
 from helper import get_matches, resize_image, print_stars
-from config import TOP_K, IMAGE_RESIZE_FACTOR, SERVER, PORT
+from config import TOP_K, IMAGE_RESIZE_FACTOR, SERVER, PORT, DEBUG
 
 filters = {"$and": {"year": {}, "price": {}, "rating": {}}}
 
@@ -24,9 +24,13 @@ limit = st.sidebar.slider(
 ) = st.sidebar.slider("Price", 0, 200, (0, 200))
 filters["$and"]["rating"]["$gte"] = st.sidebar.slider("Minimum rating", 0, 5, 3)
 
-with st.sidebar.expander("Debug"):
-    server = st.text_input(label="Server", value=SERVER)
-    port = st.text_input(label="Port", value=PORT)
+if DEBUG:
+    with st.sidebar.expander("Debug"):
+        server = st.text_input(label="Server", value=SERVER)
+        port = st.text_input(label="Port", value=PORT)
+else:
+    server = SERVER
+    port = PORT
 
 
 

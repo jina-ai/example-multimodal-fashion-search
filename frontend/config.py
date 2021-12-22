@@ -1,3 +1,5 @@
+import os
+
 # indexing data
 # CSV_FILE = "../data/styles.csv"
 DATA_DIR = "../data/images"
@@ -22,7 +24,8 @@ DATA_DIR = "../data/images"
 # client
 TOP_K = 10
 IMAGE_RESIZE_FACTOR = 3
+DEBUG = True
 
 # serving via REST
-SERVER = "0.0.0.0" # remove http://
+SERVER = os.getenv("BACKEND_SERVER", "0.0.0.0")
 PORT = 12345
