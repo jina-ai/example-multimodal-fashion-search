@@ -85,7 +85,7 @@ def search():
 @click.option("--num_docs", "-n", default=MAX_DOCS)
 def main(task: str, num_docs: int):
     if task == "index":
-        index(max_docs=num_docs)
+        index(csv_file=CSV_FILE, max_docs=num_docs)
     elif task == "search":
         search()
 
