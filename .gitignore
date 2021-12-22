@@ -2,6 +2,7 @@
 */workspaces/*
 */data/*
 data
+**/cache
 
 ### Created by https://www.gitignore.io
 ### Python ###
