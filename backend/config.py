@@ -1,6 +1,6 @@
 # indexing data
-CSV_FILE = "../data/styles.csv"
-DATA_DIR = "../data/images"
+DATA_DIR = "../data/images" # Where are the files?
+CSV_FILE = "../data/styles.csv" # Where's the metadata?
 MAX_DOCS = 100
 WORKSPACE_DIR = "workspace"
 DEVICE = "cpu"
