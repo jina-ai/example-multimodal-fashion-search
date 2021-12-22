@@ -13,6 +13,7 @@ services:
     volumes:
       - ./frontend:/workspace
       - ./data:/data
+    restart: always
 
   backend:
     build: backend
@@ -21,3 +22,4 @@ services:
     volumes:
       - ./backend:/workspace
       - ./data:/data
+    restart: always
