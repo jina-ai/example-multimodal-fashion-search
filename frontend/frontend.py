@@ -42,10 +42,6 @@ st.sidebar.title("About")
 st.sidebar.markdown(
     """This example lets you use a *textual* description to search through *images* of fashion items using [Jina](https://github.com/jina-ai/jina/).
 
-#### Why does the price change each time?
-
-The dataset doesn't provide pricing info, so it's randomly generated from the frontend on each search
-
 #### Why are the images so pixelated?
 
 To speed up indexing, we indexed relatively low-resolution graphics. We're looking at hosting hi-res images elsewhere and showing those instead. But for the purposes of a tech demo it seems like overkill.
