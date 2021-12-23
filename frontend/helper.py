@@ -82,10 +82,6 @@ def get_matches(input, server=SERVER, port=PORT, limit=TOP_K, filters=None):
         show_progress=True,
     )
     matches = response[0].docs[0].matches
-    # for match in matches:
-        # print(match.id)
-        # print(match.tags["year"])
-        # print(match.tags.keys)
 
     return matches
 
