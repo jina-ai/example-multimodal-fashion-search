@@ -70,8 +70,7 @@ if "matches" in locals():
 
         # pic_cell.image(match.uri, use_column_width="auto")
         pic_cell.image(image, use_column_width="auto")
-        desc_cell.markdown(f"##### {match.tags['productDisplayName']}")
-        desc_cell.markdown(f"##### {print_stars(match.tags['rating'])}")
+        desc_cell.markdown(f"##### {match.tags['productDisplayName']} {print_stars(match.tags['rating'])}")
         desc_cell.markdown(
             f"*{match.tags['masterCategory']}*, *{match.tags['subCategory']}*, *{match.tags['articleType']}*, *{match.tags['baseColour']}*, *{match.tags['season']}*, *{match.tags['usage']}*, *{match.tags['year']}*"
         )
