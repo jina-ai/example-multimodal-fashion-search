@@ -14,18 +14,18 @@ def index(csv_file=CSV_FILE, max_docs=MAX_DOCS):
     flow_index = (
         Flow()
         .add(
-            uses="jinahub://DocCache", 
+            uses="jinahub://DocCache/v0.1", 
             name="deduplicator",
             install_requirements=True
         )
         .add(
-            uses="jinahub://CLIPImageEncoder",
+            uses="jinahub://CLIPImageEncoder/v0.3",
             name="image_encoder",
             uses_with={"device": DEVICE},
             install_requirements=True
         )
         .add(
-            uses="jinahub://PQLiteIndexer",
+            uses="jinahub://PQLiteIndexer/v0.1.3",
             name="indexer",
             uses_with={
                 'dim': DIMS,
@@ -49,13 +49,13 @@ def search():
     flow_search = (
         Flow()
         .add(
-            uses="jinahub://CLIPTextEncoder",
+            uses="jinahub://CLIPTextEncoder/v0.1",
             name="text_encoder",
             uses_with={"device": DEVICE},
             install_requirements=True,
         )
         .add(
-            uses="jinahub://PQLiteIndexer",
+            uses="jinahub://PQLiteIndexer/v0.1.3",
             name="indexer",
             uses_with={
                 'dim': DIMS,
