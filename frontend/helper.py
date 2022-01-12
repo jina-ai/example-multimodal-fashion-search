@@ -69,11 +69,7 @@ def get_columns(document):
 
 # Client
 
-
 def get_matches(input, server=SERVER, port=PORT, limit=TOP_K, filters=None):
-    print(server)
-    from pprint import pprint
-    pprint(filters)
     client = Client(host=server, protocol="http", port=port)
     response = client.search(
         Document(text=input),
