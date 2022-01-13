@@ -25,7 +25,7 @@ def index(csv_file=CSV_FILE, max_docs=MAX_DOCS):
             install_requirements=True
         )
         .add(
-            uses="jinahub://PQLiteIndexer/v0.1.3",
+            uses="jinahub://PQLiteIndexer/v0.1.7",
             name="indexer",
             uses_with={
                 'dim': DIMS,
@@ -55,7 +55,7 @@ def search():
             install_requirements=True,
         )
         .add(
-            uses="jinahub://PQLiteIndexer/v0.1.3",
+            uses="jinahub://PQLiteIndexer/v0.1.7",
             name="indexer",
             uses_with={
                 'dim': DIMS,
