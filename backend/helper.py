@@ -1,7 +1,5 @@
-import glob
 import os
 from docarray.array.document import DocumentArray
-from jina.types.request import Request
 from config import MAX_DOCS, SERVER, PORT, DATA_DIR, CSV_FILE
 from jina import Client, Document
 import random
