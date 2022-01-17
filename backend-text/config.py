@@ -1,8 +1,8 @@
 # indexing data
 DATA_DIR = "../data/images" # Where are the files?
 CSV_FILE = "../data/styles.csv" # Where's the metadata?
+WORKSPACE_DIR = "../embeddings"
 MAX_DOCS = 100
-WORKSPACE_DIR = "workspace"
 DEVICE = "cpu"
 
 # PQLiteIndexer
