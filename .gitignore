@@ -3,6 +3,8 @@
 */data/*
 data
 **/cache
+*/embeddings/*
+embeddings/
 
 ### Created by https://www.gitignore.io
 ### Python ###

@@ -1,5 +1,6 @@
-from docarray import DocumentArray
-from config import TEXT_IMAGE_SERVER, TEXT_IMAGE_PORT, DATA_DIR, TOP_K, IMAGE_IMAGE_SERVER, IMAGE_IMAGE_PORT
+import os
+from docarray.array.document import DocumentArray
+from config import MAX_DOCS, SERVER, PORT, DATA_DIR, CSV_FILE
 from jina import Client, Document
 import random
 
@@ -12,7 +13,7 @@ def generate_price(minimum=10, maximum=200):
     return price
 
 
-def input_docs_from_csv(file_path, max_docs):
+def input_docs_from_csv(file_path=CSV_FILE, max_docs=100, data_dir=DATA_DIR):
     docs = DocumentArray()
     import csv
     from itertools import islice
@@ -22,15 +23,15 @@ def input_docs_from_csv(file_path, max_docs):
 
         for row in islice(reader, max_docs):
             try:  # To skip malformed rows
-                filename = f"{DATA_DIR}/{row['id']}.jpg"
+                filename = f"{data_dir}/{row['id']}.jpg"
                 doc = Document(uri=filename, tags=row)
-                # random.seed(int(doc.tags['id'])) # Ensure reproducability
+                random.seed(int(doc.tags['id'])) # Ensure reproducability
 
                 # Generate useful data that's missing
                 doc.tags["price"] = generate_price()  # Generate fake price
                 doc.tags["rating"] = random.randrange(0, 5)
 
-                doc.convert_uri_to_image_blob()
+                doc.load_uri_to_image_blob()
                 docs.append(doc)
             except:
                 pass
@@ -66,27 +67,10 @@ def get_columns(document):
 
 # Client
 
-def get_matches_from_image(input, server=IMAGE_IMAGE_SERVER, port=IMAGE_IMAGE_PORT, limit=TOP_K, filters=None):
-    data = input.read()
-    query_doc = Document(buffer=data)
-    query_doc.convert_buffer_to_image_blob()
-    query_doc.set_image_blob_shape((80, 60))
 
-    client = Client(host=server, protocol="http", port=port)
-    response = client.search(
-        query_doc,
-        return_results=True,
-        parameters={"limit": limit, "filter": filters},
-        show_progress=True,
-    )
+def get_matches(input, server=SERVER, port=PORT, limit=MAX_DOCS, filters=None):
     from pprint import pprint
-    pprint(response)
-    matches = response[0].docs[0].matches
-
-    return matches
-
-
-def get_matches(input, server=TEXT_IMAGE_SERVER, port=TEXT_IMAGE_PORT, limit=TOP_K, filters=None):
+    pprint(filters)
     client = Client(host=server, protocol="http", port=port)
     response = client.search(
         Document(text=input),
@@ -95,6 +79,10 @@ def get_matches(input, server=TEXT_IMAGE_SERVER, port=TEXT_IMAGE_PORT, limit=TOP
         show_progress=True,
     )
     matches = response[0].docs[0].matches
+    # for match in matches:
+        # print(match.id)
+        # print(match.tags["year"])
+        # print(match.tags.keys)
 
     return matches
 

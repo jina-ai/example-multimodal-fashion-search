@@ -4,22 +4,36 @@ services:
   frontend:
     build: frontend
     environment:
-      - BACKEND_SERVER=backend
+      - TEXT_BACKEND_SERVER=backend-text
+      - IMAGE_BACKEND_SERVER=backend-image
       - DEBUG=False
     ports:
       - 8509:8509
     depends_on:
-      - backend
+      - backend-text
+      - backend-image
     volumes:
       - ./frontend:/workspace
       - ./data:/data
     restart: always
 
-  backend:
-    build: backend
+  backend-text:
+    build: backend-text
     ports:
       - 12345:12345
     volumes:
-      - ./backend:/workspace
+      - ./backend-text:/workspace
+      - ./embeddings:/embeddings
+      #- ./workspace:/workspace/workspace
+      - ./data:/data
+    restart: always
+
+  backend-image:
+    build: backend-image
+    ports:
+      - 60000:60000
+    volumes:
+      - ./backend-image:/workspace
+      - ./embeddings:/embeddings
       - ./data:/data
     restart: always

@@ -1,6 +1,6 @@
 import streamlit as st
-from helper import get_matches, resize_image, print_stars
-from config import TOP_K, IMAGE_RESIZE_FACTOR, SERVER, PORT, DEBUG
+from helper import get_matches, resize_image, print_stars, get_matches_from_image
+from config import TOP_K, IMAGE_RESIZE_FACTOR, TEXT_IMAGE_SERVER, TEXT_IMAGE_PORT, DEBUG, IMAGE_IMAGE_SERVER, IMAGE_IMAGE_PORT
 
 filters = {"$and": {"year": {}, "price": {}, "rating": {}}}
 
@@ -10,6 +10,8 @@ st.set_page_config(page_title=title, layout="wide")
 
 # Sidebar
 st.sidebar.title("Options")
+
+input_media = st.sidebar.radio(label="Search with...", options=["text", "image"])
 
 limit = st.sidebar.slider(
     label="Maximum results", min_value=int(TOP_K / 3), max_value=TOP_K * 3, value=TOP_K
@@ -26,11 +28,13 @@ filters["$and"]["rating"]["$gte"] = st.sidebar.slider("Minimum rating", 0, 5, 3)
 
 if DEBUG:
     with st.sidebar.expander("Debug"):
-        server = st.text_input(label="Server", value=SERVER)
-        port = st.text_input(label="Port", value=PORT)
+        text_server = st.text_input(label="Text server", value=TEXT_IMAGE_SERVER)
+        text_port = st.text_input(label="Text port", value=TEXT_IMAGE_PORT)
+        image_server = st.text_input(label="Image server", value=IMAGE_IMAGE_SERVER)
+        image_port = st.text_input(label="Image port", value=IMAGE_IMAGE_PORT)
 else:
-    server = SERVER
-    port = PORT
+    text_server = TEXT_IMAGE_SERVER
+    text_port = TEXT_IMAGE_PORT
 
 
 
@@ -55,12 +59,18 @@ st.sidebar.markdown(
 
 # Main area
 st.title(title)
-query = st.text_input(label="Search term", placeholder="Blue dress")
 
-search_button = st.button("Search")
+if input_media == "text":
+    text_query = st.text_input(label="Search term", placeholder="Blue dress")
+    text_search_button = st.button("Search")
+    if text_search_button:
+        matches = get_matches(input=text_query, limit=limit, filters=filters, server=text_server, port=text_port)
 
-if search_button:
-    matches = get_matches(input=query, limit=limit, filters=filters, server=server, port=port)
+elif input_media == "image":
+    image_query = st.file_uploader(label="Image file")
+    image_search_button = st.button("Search")
+    if image_search_button:
+        matches = get_matches_from_image(input=image_query, limit=limit, filters=filters, server=image_server, port=image_port)
 
 if "matches" in locals():
     for match in matches:
@@ -68,7 +78,6 @@ if "matches" in locals():
 
         image = resize_image(match.uri, resize_factor=IMAGE_RESIZE_FACTOR)
 
-        # pic_cell.image(match.uri, use_column_width="auto")
         pic_cell.image(image, use_column_width="auto")
         desc_cell.markdown(f"##### {match.tags['productDisplayName']} {print_stars(match.tags['rating'])}")
         desc_cell.markdown(
