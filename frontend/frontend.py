@@ -1,8 +1,32 @@
 import streamlit as st
-from helper import get_matches, resize_image, print_stars, get_matches_from_image
-from config import TOP_K, IMAGE_RESIZE_FACTOR, TEXT_IMAGE_SERVER, TEXT_IMAGE_PORT, DEBUG, IMAGE_IMAGE_SERVER, IMAGE_IMAGE_PORT
+from helper import (
+    get_matches,
+    resize_image,
+    print_stars,
+    get_matches_from_image,
+    facets,
+)
+from config import (
+    TOP_K,
+    IMAGE_RESIZE_FACTOR,
+    TEXT_IMAGE_SERVER,
+    TEXT_IMAGE_PORT,
+    DEBUG,
+    IMAGE_IMAGE_SERVER,
+    IMAGE_IMAGE_PORT,
+)
 
-filters = {"$and": {"year": {}, "price": {}, "rating": {}}}
+filters = {
+    "$and": {
+        "year": {},
+        "price": {},
+        "rating": {},
+        "gender": {},
+        "season": {},
+        "baseColour": {},
+        "masterCategory": {},
+    }
+}
 
 title = "👕 Multimodal fashion search with Jina"
 
@@ -13,18 +37,37 @@ st.sidebar.title("Options")
 
 input_media = st.sidebar.radio(label="Search with...", options=["text", "image"])
 
-limit = st.sidebar.slider(
-    label="Maximum results", min_value=int(TOP_K / 3), max_value=TOP_K * 3, value=TOP_K
+
+filters["$and"]["masterCategory"]["$in"] = st.sidebar.multiselect(
+    "Category", facets.masterCategory, default=facets.masterCategory
 )
 
-(filters["$and"]["year"]["$gte"], filters["$and"]["year"]["$lte"]) = st.sidebar.slider(
-    "Year", 2007, 2019, (2007, 2019)
+# filters["$and"]["gender"]["$in"] = st.sidebar.multiselect(
+# "Gender", facets.gender, default=facets.gender
+# )
+filters["$and"]["season"]["$in"] = st.sidebar.multiselect(
+    "Season", facets.season, default=facets.season
 )
 (
     filters["$and"]["price"]["$gte"],
     filters["$and"]["price"]["$lte"],
 ) = st.sidebar.slider("Price", 0, 200, (0, 200))
-filters["$and"]["rating"]["$gte"] = st.sidebar.slider("Minimum rating", 0, 5, 3)
+
+filters["$and"]["rating"]["$gte"] = st.sidebar.slider("Minimum rating", 0, 5, 0)
+limit = st.sidebar.slider(
+    label="Maximum results",
+    min_value=int(TOP_K / 3),
+    max_value=TOP_K * 3,
+    value=TOP_K,
+)
+# filters["$and"]["baseColour"]["$in"] = st.sidebar.multiselect(
+# "Color", facets.color, default=facets.color
+# )
+# (
+# filters["$and"]["year"]["$gte"],
+# filters["$and"]["year"]["$lte"],
+# ) = st.sidebar.slider("Year", 2007, 2019, (2007, 2019))
+
 
 if DEBUG:
     with st.sidebar.expander("Debug"):
@@ -35,7 +78,6 @@ if DEBUG:
 else:
     text_server = TEXT_IMAGE_SERVER
     text_port = TEXT_IMAGE_PORT
-
 
 
 # season = st.sidebar.selectbox("Season", ["Summer", "Fall", "Winter", "Spring"])
@@ -64,13 +106,25 @@ if input_media == "text":
     text_query = st.text_input(label="Search term", placeholder="Blue dress")
     text_search_button = st.button("Search")
     if text_search_button:
-        matches = get_matches(input=text_query, limit=limit, filters=filters, server=text_server, port=text_port)
+        matches = get_matches(
+            input=text_query,
+            limit=limit,
+            filters=filters,
+            server=text_server,
+            port=text_port,
+        )
 
 elif input_media == "image":
     image_query = st.file_uploader(label="Image file")
     image_search_button = st.button("Search")
     if image_search_button:
-        matches = get_matches_from_image(input=image_query, limit=limit, filters=filters, server=image_server, port=image_port)
+        matches = get_matches_from_image(
+            input=image_query,
+            limit=limit,
+            filters=filters,
+            server=image_server,
+            port=image_port,
+        )
 
 if "matches" in locals():
     for match in matches:
@@ -79,7 +133,9 @@ if "matches" in locals():
         image = resize_image(match.uri, resize_factor=IMAGE_RESIZE_FACTOR)
 
         pic_cell.image(image, use_column_width="auto")
-        desc_cell.markdown(f"##### {match.tags['productDisplayName']} {print_stars(match.tags['rating'])}")
+        desc_cell.markdown(
+            f"##### {match.tags['productDisplayName']} {print_stars(match.tags['rating'])}"
+        )
         desc_cell.markdown(
             f"*{match.tags['masterCategory']}*, *{match.tags['subCategory']}*, *{match.tags['articleType']}*, *{match.tags['baseColour']}*, *{match.tags['season']}*, *{match.tags['usage']}*, *{match.tags['year']}*"
         )

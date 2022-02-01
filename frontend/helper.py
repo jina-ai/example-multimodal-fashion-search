@@ -117,3 +117,10 @@ def resize_image(filename, resize_factor=2):
     image = image.resize((w * resize_factor, h * resize_factor), Image.ANTIALIAS)
 
     return image
+
+class facets:
+    gender = ["Men", "Women"]
+    season = ["Summer", "Spring", "Fall", "Winter"]
+    color = ['Beige', 'Black', 'Blue', 'Bronze', 'Brown', 'Burgundy', 'Charcoal', 'Coffee Brown', 'Copper', 'Cream', 'Fluorescent Green', 'Gold', 'Green', 'Grey', 'Grey Melange', 'Khaki', 'Lavender', 'Lime Green', 'Magenta', 'Maroon', 'Mauve', 'Metallic', 'Multi', 'Mushroom Brown', 'Mustard', 'NA', 'Navy Blue', 'Nude', 'Off White', 'Olive', 'Orange', 'Peach', 'Pink', 'Purple', 'Red', 'Rose', 'Rust', 'Sea Green', 'Silver', 'Skin', 'Steel', 'Tan', 'Taupe', 'Teal', 'Turquoise Blue', 'White', 'Yellow']
+    usage = ['', 'Casual', 'Ethnic', 'Formal', 'Home', 'NA', 'Party', 'Smart Casual', 'Sports', 'Travel']
+    masterCategory = ['Accessories', 'Apparel', 'Footwear', 'Free Items', 'Home', 'Personal Care', 'Sporting Goods']
