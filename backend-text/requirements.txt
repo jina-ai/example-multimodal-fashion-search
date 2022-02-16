@@ -1,2 +1,2 @@
-jina==2.6.2
+jina==3.0.0
 Pillow

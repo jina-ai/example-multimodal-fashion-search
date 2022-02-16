@@ -1,7 +1,7 @@
 import os
-from docarray.array.document import DocumentArray
+from docarray import DocumentArray, Document
 from config import MAX_DOCS, SERVER, PORT, DATA_DIR, CSV_FILE
-from jina import Client, Document
+from jina import Client
 import random
 
 search_terms = ("Dress", "Shirt", "Shoe")
@@ -31,7 +31,7 @@ def input_docs_from_csv(file_path=CSV_FILE, max_docs=100, data_dir=DATA_DIR):
                 doc.tags["price"] = generate_price()  # Generate fake price
                 doc.tags["rating"] = random.randrange(0, 5)
 
-                doc.load_uri_to_image_blob()
+                doc.load_uri_to_image_tensor()
                 docs.append(doc)
             except:
                 pass
@@ -43,7 +43,8 @@ def get_columns(document):
     """
     Return a list of tuples, each tuple containing column name and type
     """
-    tags = document.tags.to_dict()
+    # tags = document.tags.to_dict()
+    tags = document.tags
     names = list(tags.keys())
     types = list(tags.values())
     columns = []

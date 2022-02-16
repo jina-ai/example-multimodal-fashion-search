@@ -1,6 +1,6 @@
 from jina import Flow
 from helper import input_docs_from_csv, get_columns
-from config import DEVICE, MAX_DOCS, WORKSPACE_DIR, PORT, CSV_FILE, DIMS
+from config import DEVICE, MAX_DOCS, WORKSPACE_DIR, PORT, CSV_FILE, DIMS, TIMEOUT_READY
 import click
 import pickle
 import sys
@@ -13,19 +13,20 @@ def index(csv_file=CSV_FILE, max_docs=MAX_DOCS):
 
     flow_index = (
         Flow()
+        # .add(
+            # uses="jinahub://DocCache/v0.1", 
+            # name="deduplicator",
+            # install_requirements=True,
+        # )
         .add(
-            uses="jinahub://DocCache/v0.1", 
-            name="deduplicator",
-            install_requirements=True
-        )
-        .add(
-            uses="jinahub://CLIPImageEncoder/v0.3",
+            uses="jinahub://CLIPImageEncoder/v0.4",
             name="image_encoder",
             uses_with={"device": DEVICE},
-            install_requirements=True
+            install_requirements=True,
+            uses_metas={"timeout_ready": TIMEOUT_READY},
         )
         .add(
-            uses="jinahub://PQLiteIndexer/v0.1.7",
+            uses="jinahub://PQLiteIndexer/v0.2.3-rc",
             name="indexer",
             uses_with={
                 'dim': DIMS,
@@ -49,13 +50,13 @@ def search():
     flow_search = (
         Flow()
         .add(
-            uses="jinahub://CLIPTextEncoder/v0.1",
+            uses="jinahub://CLIPTextEncoder/v0.2",
             name="text_encoder",
             uses_with={"device": DEVICE},
             install_requirements=True,
         )
         .add(
-            uses="jinahub://PQLiteIndexer/v0.1.7",
+            uses="jinahub://PQLiteIndexer/v0.2.3-rc",
             name="indexer",
             uses_with={
                 'dim': DIMS,

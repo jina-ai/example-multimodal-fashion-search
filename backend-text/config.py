@@ -24,3 +24,6 @@ search_terms = ("Dress", "Shirt", "Shoe")
 # serving via REST
 SERVER = "0.0.0.0" # remove http://
 PORT = 12345
+
+# metas for executors
+TIMEOUT_READY = -1 # Wait forever for executor to be ready. Good for slow connections
