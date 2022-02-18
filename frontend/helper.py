@@ -87,16 +87,18 @@ def get_matches_from_image(input, server=IMAGE_IMAGE_SERVER, port=IMAGE_IMAGE_PO
 
 
 def get_matches(input, server=TEXT_IMAGE_SERVER, port=TEXT_IMAGE_PORT, limit=TOP_K, filters=None):
+    # filters = {
+        # "season": {"$eq": "Fall"}
+    # }
     client = Client(host=server, protocol="http", port=port)
-    response = client.search(
+    matches = client.search(
         Document(text=input),
         return_results=True,
         parameters={"limit": limit, "filter": filters},
         show_progress=True,
     )
-    matches = response[0].docs[0].matches
 
-    return matches
+    return matches[0].matches
 
 
 def print_stars(rating, maximum=5):

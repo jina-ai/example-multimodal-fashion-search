@@ -18,13 +18,13 @@ from config import (
 
 filters = {
     "$and": {
-        "year": {},
-        "price": {},
+        # "price": {},
         "rating": {},
-        "gender": {},
         "season": {},
-        "baseColour": {},
         "masterCategory": {},
+        # "gender": {},
+        # "baseColour": {},
+        # "year": {},
     }
 }
 
@@ -48,10 +48,10 @@ filters["$and"]["masterCategory"]["$in"] = st.sidebar.multiselect(
 filters["$and"]["season"]["$in"] = st.sidebar.multiselect(
     "Season", facets.season, default=facets.season
 )
-(
-    filters["$and"]["price"]["$gte"],
-    filters["$and"]["price"]["$lte"],
-) = st.sidebar.slider("Price", 0, 200, (0, 200))
+# (
+    # filters["$and"]["price"]["$gte"],
+    # filters["$and"]["price"]["$lte"],
+# ) = st.sidebar.slider("Price", 0, 200, (0, 200))
 
 filters["$and"]["rating"]["$gte"] = st.sidebar.slider("Minimum rating", 0, 5, 0)
 limit = st.sidebar.slider(
@@ -113,6 +113,7 @@ if input_media == "text":
             server=text_server,
             port=text_port,
         )
+        print(matches)
 
 elif input_media == "image":
     image_query = st.file_uploader(label="Image file")
