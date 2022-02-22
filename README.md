@@ -41,9 +41,14 @@ The front-end is built in [Streamlit](https://streamlit.io/).
 
 `docker-compose up`
 
+## Tips
+
+- Index using the [small dataset](https://www.kaggle.com/paramaggarwal/fashion-product-images-small), then swap out the data directory for that of the [hi-res dataset](https://www.kaggle.com/paramaggarwal/fashion-product-images-dataset) for nicer-looking results and speedier indexing.
+
 ## TODO
 
 - [X] Streamlit frontend
 - [X] Separate indexing and querying
 - [X] Index more by default
-- [ ] Switch out to higher-res dataset for nicer pics
+- [X] Add image-to-image search
+- [X] Switch out to higher-res dataset for nicer pics (on examples.jina.ai only)

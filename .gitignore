@@ -5,6 +5,7 @@ data
 **/cache
 */embeddings/*
 embeddings/
+columns.p
 
 ### Created by https://www.gitignore.io
 ### Python ###

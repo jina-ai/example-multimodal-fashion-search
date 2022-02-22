@@ -18,9 +18,6 @@ COLUMNS = [
 ]
 DIMS = 512 # This should be same shape as vector embedding
 
-# searching via gRPC
-search_terms = ("Dress", "Shirt", "Shoe")
-
 # serving via REST
 SERVER = "0.0.0.0" # remove http://
 PORT = 12345

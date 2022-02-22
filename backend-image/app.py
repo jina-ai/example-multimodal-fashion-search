@@ -1,92 +1,67 @@
 from jina import Flow
-from helper import input_docs_from_csv, get_columns
-from config import DEVICE, MAX_DOCS, WORKSPACE_DIR, PORT, CSV_FILE, DIMS
+from docarray import Document
+from config import DEVICE, MAX_DOCS, WORKSPACE_DIR, PORT, DIMS
 import click
 import pickle
 
-def index(csv_file=CSV_FILE, max_docs=MAX_DOCS):
-    docs = input_docs_from_csv(file_path=csv_file, max_docs=max_docs)
+columns = pickle.load(open("../columns.p", "rb"))
 
-    columns = get_columns(docs[0]) # Get all the column info from first doc
-    pickle.dump(columns, open("columns.p", "wb")) # Pickle values so search fn can pick up later
+# We only use one Flow for searching by image, since we already created our embeddings when we ran `app.py -t index` from `backend-text`
 
-    flow_index = (
-        Flow()
-        .add(
-            uses="jinahub://DocCache/v0.1", 
-            name="deduplicator",
-            install_requirements=True
-        )
-        .add(
-            uses="jinahub://CLIPImageEncoder/v0.3",
-            name="image_encoder",
-            uses_with={"device": DEVICE},
-            install_requirements=True
-        )
-        .add(
-            uses="jinahub://PQLiteIndexer/v0.1.7",
-            name="indexer",
-            uses_with={
-                'dim': DIMS,
-                'columns': columns,
-                # 'columns': COLUMNS,
-                'metric': "cosine",
-                'include_metadata': True
-            },
-            uses_metas={"workspace": WORKSPACE_DIR},
-            volumes=f"./{WORKSPACE_DIR}:/workspace/workspace",
-            install_requirements=True
-        )
+flow = (
+    Flow()
+    .add(
+        uses="jinahub://CLIPImageEncoder/",
+        name="text_encoder",
+        uses_with={"device": DEVICE},
+        install_requirements=True,
     )
-
-    with flow_index:
-        flow_index.index(inputs=docs, show_progress=True)
+    .add(
+        uses="jinahub://PQLiteIndexer/",
+        name="indexer",
+        uses_with={
+            "dim": DIMS,
+            "columns": columns,
+            "metric": "cosine",
+            "include_metadata": True,
+        },
+        uses_metas={"workspace": WORKSPACE_DIR},
+        volumes=f"./{WORKSPACE_DIR}:/workspace/workspace",
+        install_requirements=True,
+    )
+)
 
 
 def search():
-    columns = pickle.load(open("columns.p", "rb"))
-    flow_search = (
-        Flow()
-        .add(
-            uses="jinahub://CLIPImageEncoder/v0.3",
-            name="text_encoder",
-            uses_with={"device": DEVICE},
-            install_requirements=True,
-        )
-        .add(
-            uses="jinahub://PQLiteIndexer/v0.1.7",
-            name="indexer",
-            uses_with={
-                'dim': DIMS,
-                'columns': columns,
-                'metric': "cosine",
-                'include_metadata': True
-            },
-            uses_metas={"workspace": WORKSPACE_DIR},
-            volumes=f"./{WORKSPACE_DIR}:/workspace/workspace",
-            install_requirements=True
-        )
-    )
+    with flow:
+        flow.port_expose = PORT
+        flow.cors = True
+        flow.protocol = "http"
+        flow.block()
 
-    with flow_search:
-        flow_search.port_expose = PORT
-        flow_search.cors = True
-        flow_search.protocol = "http"
-        flow_search.block()
+
+def search_grpc():
+
+    query_doc = Document(uri="../data/images/20000.jpg")
+    query_doc.load_uri_to_image_tensor()
+
+    with flow:
+        response = flow.search(query_doc, return_result=True)
+
+    print([match.uri for match in response[0].matches])
 
 
 @click.command()
 @click.option(
     "--task",
     "-t",
-    type=click.Choice(["index", "search"], case_sensitive=False),
+    type=click.Choice(["index", "search", "search_grpc"], case_sensitive=False),
 )
-@click.option("--num_docs", "-n", default=MAX_DOCS)
-def main(task: str, num_docs: int):
-    if task == "index":
-        index(csv_file=CSV_FILE, max_docs=num_docs)
-    elif task == "search":
+def main(task: str):
+    if task == "search":
         search()
+    elif task == "search_grpc":
+        search_grpc()
 
 
 if __name__ == "__main__":

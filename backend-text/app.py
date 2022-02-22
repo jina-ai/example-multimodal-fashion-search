@@ -9,7 +9,7 @@ def index(csv_file=CSV_FILE, max_docs=MAX_DOCS):
     docs = input_docs_from_csv(file_path=csv_file, max_docs=max_docs)
 
     columns = get_columns(docs[0]) # Get all the column info from first doc
-    pickle.dump(columns, open("columns.p", "wb")) # Pickle values so search fn can pick up later
+    pickle.dump(columns, open("../columns.p", "wb")) # Pickle values so search fn can pick up later
 
     flow_index = (
         Flow()
@@ -40,7 +40,7 @@ def index(csv_file=CSV_FILE, max_docs=MAX_DOCS):
 
 
 def search():
-    columns = pickle.load(open("columns.p", "rb"))
+    columns = pickle.load(open("../columns.p", "rb"))
     flow_search = (
         Flow(protocol="http", port_expose=PORT)
         .add(
@@ -65,13 +65,13 @@ def search():
     )
 
     with flow_search:
-        # flow_search.port_expose = PORT
-        # flow_search.cors = True
-        # flow_search.protocol = "http"
+        flow_search.port_expose = PORT
+        flow_search.cors = True
+        flow_search.protocol = "http"
         flow_search.block()
 
 def search_grpc():
-    columns = pickle.load(open("columns.p", "rb"))
+    columns = pickle.load(open("../columns.p", "rb"))
     flow_search = (
         Flow()
         .add(
@@ -96,8 +96,8 @@ def search_grpc():
     )
 
     with flow_search:
-        results = flow_search.search(Document(text="shoes"), return_results=True)
-        print([result.uri for result in results[0].matches])
+        response = flow_search.search(Document(text="shoes"), return_results=True)
+        print([match.uri for match in response[0].matches])
 
 
 @click.command()
