@@ -1,10 +1,16 @@
-from config import TEXT_IMAGE_SERVER, TEXT_IMAGE_PORT, TOP_K, IMAGE_IMAGE_SERVER, IMAGE_IMAGE_PORT
+from config import (
+    TEXT_IMAGE_SERVER,
+    TEXT_IMAGE_PORT,
+    TOP_K,
+    IMAGE_IMAGE_SERVER,
+    IMAGE_IMAGE_PORT,
+)
 from jina import Client, Document
 
-search_terms = ("Dress", "Shirt", "Shoe")
 
-
-def get_matches(input, server=TEXT_IMAGE_SERVER, port=TEXT_IMAGE_PORT, limit=TOP_K, filters=None):
+def get_matches(
+    input, server=TEXT_IMAGE_SERVER, port=TEXT_IMAGE_PORT, limit=TOP_K, filters=None
+):
     client = Client(host=server, protocol="http", port=port)
     response = client.search(
         Document(text=input),
@@ -15,7 +21,10 @@ def get_matches(input, server=TEXT_IMAGE_SERVER, port=TEXT_IMAGE_PORT, limit=TOP
 
     return response[0].matches
 
-def get_matches_from_image(input, server=IMAGE_IMAGE_SERVER, port=IMAGE_IMAGE_PORT, limit=TOP_K, filters=None):
+
+def get_matches_from_image(
+    input, server=IMAGE_IMAGE_SERVER, port=IMAGE_IMAGE_PORT, limit=TOP_K, filters=None
+):
     data = input.read()
     query_doc = Document(blob=data)
     query_doc.convert_blob_to_image_tensor()
@@ -30,7 +39,6 @@ def get_matches_from_image(input, server=IMAGE_IMAGE_SERVER, port=IMAGE_IMAGE_PO
     )
 
     return response[0].matches
-
 
 
 def print_stars(rating, maximum=5):
@@ -52,9 +60,77 @@ def resize_image(filename, resize_factor=2):
 
     return image
 
+
 class facets:
     gender = ["Men", "Women"]
     season = ["Summer", "Spring", "Fall", "Winter"]
-    color = ['Beige', 'Black', 'Blue', 'Bronze', 'Brown', 'Burgundy', 'Charcoal', 'Coffee Brown', 'Copper', 'Cream', 'Fluorescent Green', 'Gold', 'Green', 'Grey', 'Grey Melange', 'Khaki', 'Lavender', 'Lime Green', 'Magenta', 'Maroon', 'Mauve', 'Metallic', 'Multi', 'Mushroom Brown', 'Mustard', 'NA', 'Navy Blue', 'Nude', 'Off White', 'Olive', 'Orange', 'Peach', 'Pink', 'Purple', 'Red', 'Rose', 'Rust', 'Sea Green', 'Silver', 'Skin', 'Steel', 'Tan', 'Taupe', 'Teal', 'Turquoise Blue', 'White', 'Yellow']
-    usage = ['', 'Casual', 'Ethnic', 'Formal', 'Home', 'NA', 'Party', 'Smart Casual', 'Sports', 'Travel']
-    masterCategory = ['Accessories', 'Apparel', 'Footwear', 'Free Items', 'Home', 'Personal Care', 'Sporting Goods']
+    color = [
+        "Beige",
+        "Black",
+        "Blue",
+        "Bronze",
+        "Brown",
+        "Burgundy",
+        "Charcoal",
+        "Coffee Brown",
+        "Copper",
+        "Cream",
+        "Fluorescent Green",
+        "Gold",
+        "Green",
+        "Grey",
+        "Grey Melange",
+        "Khaki",
+        "Lavender",
+        "Lime Green",
+        "Magenta",
+        "Maroon",
+        "Mauve",
+        "Metallic",
+        "Multi",
+        "Mushroom Brown",
+        "Mustard",
+        "NA",
+        "Navy Blue",
+        "Nude",
+        "Off White",
+        "Olive",
+        "Orange",
+        "Peach",
+        "Pink",
+        "Purple",
+        "Red",
+        "Rose",
+        "Rust",
+        "Sea Green",
+        "Silver",
+        "Skin",
+        "Steel",
+        "Tan",
+        "Taupe",
+        "Teal",
+        "Turquoise Blue",
+        "White",
+        "Yellow",
+    ]
+    usage = [
+        "",
+        "Casual",
+        "Ethnic",
+        "Formal",
+        "Home",
+        "NA",
+        "Party",
+        "Smart Casual",
+        "Sports",
+        "Travel",
+    ]
+    masterCategory = [
+        "Accessories",
+        "Apparel",
+        "Footwear",
+        "Free Items",
+        "Home",
+        "Personal Care",
+        "Sporting Goods",
+    ]
