@@ -11,7 +11,7 @@ def index(csv_file=CSV_FILE, max_docs=MAX_DOCS):
     columns = get_columns(docs[0]) # Get all the column info from first doc
     pickle.dump(columns, open("../columns.p", "wb")) # Pickle values so search fn can pick up later
 
-    flow_index = (
+    flow = (
         Flow()
         .add(
             uses="jinahub://CLIPImageEncoder/v0.4",
@@ -35,13 +35,13 @@ def index(csv_file=CSV_FILE, max_docs=MAX_DOCS):
         )
     )
 
-    with flow_index:
-        flow_index.index(inputs=docs, show_progress=True)
+    with flow:
+        flow.index(inputs=docs, show_progress=True)
 
 
 def search():
     columns = pickle.load(open("../columns.p", "rb"))
-    flow_search = (
+    flow = (
         Flow(protocol="http", port_expose=PORT)
         .add(
             uses="jinahub://CLIPTextEncoder/v0.2",
@@ -64,12 +64,12 @@ def search():
         )
     )
 
-    with flow_search:
-        flow_search.block()
+    with flow:
+        flow.block()
 
 def search_grpc():
     columns = pickle.load(open("../columns.p", "rb"))
-    flow_search = (
+    flow = (
         Flow()
         .add(
             uses="jinahub://CLIPTextEncoder/v0.2",
@@ -92,8 +92,8 @@ def search_grpc():
         )
     )
 
-    with flow_search:
-        response = flow_search.search(Document(text="shoes"), return_results=True)
+    with flow:
+        response = flow.search(Document(text="shoes"), return_results=True)
         print([match.uri for match in response[0].matches])
 
 
