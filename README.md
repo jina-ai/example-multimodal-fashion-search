@@ -23,12 +23,22 @@ The front-end is built in [Streamlit](https://streamlit.io/).
 └── styles.csv
 ```
 
-### Run backend
+### Index data using `backend-text`
 
-1. `cd backend`
+To be honest, it was arbitrary where to put the indexing code. But I wanted to stay DRY so only did it in one place
+
+1. `cd backend-text`
 2. `pip install -r requirements.txt`
 3. `python app.py -t index -n 10` (where `10` is the number of files you want to index)
-4. `python app.py -t search`
+
+### Start search Flows
+
+Depending on which Flows you want you can spin up RESTful interface(s) for the frontend to talk to:
+
+1. `cd backend-<image/text>`
+2. `python app.py -t search`
+
+Both of these Flows use the same index, but have different ports for the frontend to talk to. If you want both image and text search you'll have to run both search Flows.
 
 ### Run frontend
 
@@ -39,11 +49,25 @@ The front-end is built in [Streamlit](https://streamlit.io/).
 
 ## With Docker-compose
 
-`docker-compose up`
+1. First index the data as stated above
+2. In the repo's root directory, run `docker-compose up` 
 
 ## Tips
 
-- Index using the [small dataset](https://www.kaggle.com/paramaggarwal/fashion-product-images-small), then swap out the data directory for that of the [hi-res dataset](https://www.kaggle.com/paramaggarwal/fashion-product-images-dataset) for nicer-looking results and speedier indexing.
+- Index using the [small dataset](https://www.kaggle.com/paramaggarwal/fashion-product-images-small), then swap out the data directory for that of the [hi-res dataset](https://www.kaggle.com/paramaggarwal/fashion-product-images-dataset) for nicer-looking results.
+
+## Debugging
+
+### Search using gRPC
+
+This is a good way to test quickly, instead of going through frontend. It'll take either a string ("shoes") or one of the images from the dataset (depending on whether you do image or text search) and use that as a query.
+
+1. Index your data
+2. `cd backend-text` or `cd backend-image`
+3. `pip install -r requirements.txt`
+4. `python app.py -t search_grpc`
+
+It should then print out the `uri`s of the matching Documents.
 
 ## TODO
 
