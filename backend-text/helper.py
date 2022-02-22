@@ -1,4 +1,3 @@
-import os
 from docarray import DocumentArray, Document
 from config import MAX_DOCS, SERVER, PORT, DATA_DIR, CSV_FILE
 from jina import Client

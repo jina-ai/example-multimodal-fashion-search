@@ -13,11 +13,6 @@ def index(csv_file=CSV_FILE, max_docs=MAX_DOCS):
 
     flow_index = (
         Flow()
-        # .add(
-            # uses="jinahub://DocCache/v0.1", 
-            # name="deduplicator",
-            # install_requirements=True,
-        # )
         .add(
             uses="jinahub://CLIPImageEncoder/v0.4",
             name="image_encoder",
@@ -26,12 +21,11 @@ def index(csv_file=CSV_FILE, max_docs=MAX_DOCS):
             uses_metas={"timeout_ready": TIMEOUT_READY},
         )
         .add(
-            uses="jinahub://PQLiteIndexer/v0.2.3-rc",
+            uses="jinahub://PQLiteIndexer/latest",
             name="indexer",
             uses_with={
                 'dim': DIMS,
                 'columns': columns,
-                # 'columns': COLUMNS,
                 'metric': "cosine",
                 'include_metadata': True
             },
@@ -56,7 +50,7 @@ def search():
             install_requirements=True,
         )
         .add(
-            uses="jinahub://PQLiteIndexer/v0.2.3-rc",
+            uses="jinahub://PQLiteIndexer/latest",
             name="indexer",
             uses_with={
                 'dim': DIMS,
@@ -87,7 +81,7 @@ def search_grpc():
             install_requirements=True,
         )
         .add(
-            uses="jinahub://PQLiteIndexer/v0.2.3-rc",
+            uses="jinahub://PQLiteIndexer/latest",
             name="indexer",
             uses_with={
                 'dim': DIMS,
@@ -103,7 +97,7 @@ def search_grpc():
 
     with flow_search:
         results = flow_search.search(Document(text="shoes"), return_results=True)
-        print([result.text for result in results])
+        print([result.uri for result in results[0].matches])
 
 
 @click.command()
