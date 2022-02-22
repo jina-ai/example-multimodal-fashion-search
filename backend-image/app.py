@@ -9,7 +9,7 @@ columns = pickle.load(open("../columns.p", "rb"))
 # We only use one Flow for searching by image, since we already created our embeddings when we ran `app.py -t index` from `backend-text`
 
 flow = (
-    Flow()
+    Flow(port_expose=PORT, protocol="http")
     .add(
         uses="jinahub://CLIPImageEncoder/",
         name="text_encoder",
@@ -34,9 +34,6 @@ flow = (
 
 def search():
     with flow:
-        flow.port_expose = PORT
-        flow.cors = True
-        flow.protocol = "http"
         flow.block()
 
 

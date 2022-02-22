@@ -65,9 +65,6 @@ def search():
     )
 
     with flow_search:
-        flow_search.port_expose = PORT
-        flow_search.cors = True
-        flow_search.protocol = "http"
         flow_search.block()
 
 def search_grpc():
