@@ -2,15 +2,15 @@
 # so other people can skip the slow embedding process and just pull embeddings directly via DocumentArray.pull()
 
 from jina import Flow
-from helper import input_docs_from_csv
+from helper import csv_to_docarray, remove_tensor
 from config import DEVICE, CSV_FILE, TIMEOUT_READY
 
-MAX_DOCS = 999999
+MAX_DOCS = 9999999
 
 pushed_name = "fashion-product-images-clip-all"
 
 def embed_docs(csv_file=CSV_FILE, max_docs=MAX_DOCS):
-    docs = input_docs_from_csv(file_path=csv_file, max_docs=max_docs)
+    docs = csv_to_docarray(file_path=csv_file, max_docs=max_docs)
 
     flow = (
         Flow()
@@ -22,19 +22,6 @@ def embed_docs(csv_file=CSV_FILE, max_docs=MAX_DOCS):
             uses_metas={"timeout_ready": TIMEOUT_READY},
             replicas=2,
         )
-        # .add(
-            # uses="jinahub://PQLiteIndexer/latest",
-            # name="indexer",
-            # uses_with={
-                # "dim": DIMS,
-                # "columns": columns,
-                # "metric": "cosine",
-                # "include_metadata": True,
-            # },
-            # uses_metas={"workspace": WORKSPACE_DIR},
-            # volumes=f"./{WORKSPACE_DIR}:/workspace/workspace",
-            # install_requirements=True,
-        # )
     )
 
     with flow:
@@ -42,9 +29,11 @@ def embed_docs(csv_file=CSV_FILE, max_docs=MAX_DOCS):
 
     return docs
 
+# Create embeddings
 embedded_docs = embed_docs()
 
-for doc in embedded_docs:
-    doc.tensor = None
+# Remove tensors to save space
+embedded_docs.apply(remove_tensor)
 
+# Push to cloud so others can download later
 embedded_docs.push(pushed_name)
