@@ -2,7 +2,7 @@ from jina import Flow
 from helper import input_docs_from_csv
 from config import DEVICE, CSV_FILE, TIMEOUT_READY
 
-MAX_DOCS = 10
+MAX_DOCS = 999999
 
 pushed_name = "fashion-product-images-clip-all"
 
