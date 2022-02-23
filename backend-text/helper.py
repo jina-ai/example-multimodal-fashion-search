@@ -1,7 +1,6 @@
 from docarray import DocumentArray, Document
 from config import DATA_DIR, CSV_FILE
 import random
-import pretty_errors
 
 def generate_price(minimum=10, maximum=200):
     price = random.randrange(minimum, maximum)
