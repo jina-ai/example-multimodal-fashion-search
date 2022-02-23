@@ -1,21 +1,13 @@
-from docarray import Document, DocumentArray
 from jina import Flow
-from helper import input_docs_from_csv, get_columns
-from config import DEVICE, WORKSPACE_DIR, PORT, CSV_FILE, DIMS, TIMEOUT_READY
-import click
-import pickle
+from helper import input_docs_from_csv
+from config import DEVICE, CSV_FILE, TIMEOUT_READY
 
-MAX_DOCS = 10
+MAX_DOCS = 999999
 
 pushed_name = "fashion-product-images-clip-all"
 
 def embed_docs(csv_file=CSV_FILE, max_docs=MAX_DOCS):
     docs = input_docs_from_csv(file_path=csv_file, max_docs=max_docs)
-
-    columns = get_columns(docs[0])  # Get all the column info from first doc
-    pickle.dump(
-        columns, open("../columns.p", "wb")
-    )  # Pickle values so search fn can pick up later
 
     flow = (
         Flow()
