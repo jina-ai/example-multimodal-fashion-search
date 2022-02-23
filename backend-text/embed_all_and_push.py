@@ -3,7 +3,7 @@
 
 from jina import Flow
 from helper import csv_to_docarray, remove_tensor
-from config import DEVICE, CSV_FILE, TIMEOUT_READY
+from config import DEVICE, CSV_FILE
 
 MAX_DOCS = 999999
 
@@ -18,7 +18,6 @@ def embed_docs():
             name="image_encoder",
             uses_with={"device": DEVICE},
             install_requirements=True,
-            uses_metas={"timeout_ready": TIMEOUT_READY},
             replicas=2,
         )
     )
