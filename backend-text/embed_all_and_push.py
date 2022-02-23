@@ -5,7 +5,7 @@ from jina import Flow
 from helper import csv_to_docarray, remove_tensor
 from config import DEVICE, CSV_FILE, TIMEOUT_READY
 
-MAX_DOCS = 9999999
+MAX_DOCS = 100
 
 pushed_name = "fashion-product-images-clip-all"
 
@@ -24,9 +24,9 @@ def embed_docs():
     )
 
     with flow:
-        docs = flow.index(inputs=docs, show_progress=True, return_results=True)
+        embedded_docs = flow.index(inputs=docs, show_progress=True, return_results=True)
 
-    return docs
+    return embedded_docs
 
 print("Creating intial docarray")
 docs = csv_to_docarray(file_path=CSV_FILE, max_docs=MAX_DOCS)

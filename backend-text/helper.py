@@ -1,6 +1,7 @@
 from docarray import DocumentArray, Document
 from config import DATA_DIR, CSV_FILE
 import random
+import os
 
 def generate_price(minimum=10, maximum=200):
     price = random.randrange(minimum, maximum)
@@ -15,8 +16,8 @@ def remove_tensor(doc):
 
 
 def process_doc(doc):
-    try:
-        filename = f"{DATA_DIR}/{doc.id}.jpg"
+    filename = f"{DATA_DIR}/{doc.id}.jpg"
+    if os.path.isfile(filename):
         doc.uri = filename
 
         # Generate fake price
@@ -28,9 +29,6 @@ def process_doc(doc):
         doc = doc.load_uri_to_image_tensor()
 
         return doc
-
-    except:
-        pass
 
 
 def csv_to_docarray(file_path=CSV_FILE, max_docs=100):
