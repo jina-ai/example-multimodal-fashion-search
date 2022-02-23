@@ -5,7 +5,7 @@ from jina import Flow
 from helper import csv_to_docarray, remove_tensor
 from config import DEVICE, CSV_FILE, TIMEOUT_READY
 
-MAX_DOCS = 100
+MAX_DOCS = 999999
 
 pushed_name = "fashion-product-images-clip-all"
 
