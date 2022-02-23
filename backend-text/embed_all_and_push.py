@@ -2,7 +2,7 @@ from jina import Flow
 from helper import input_docs_from_csv
 from config import DEVICE, CSV_FILE, TIMEOUT_READY
 
-MAX_DOCS = 999999
+MAX_DOCS = 10
 
 pushed_name = "fashion-product-images-clip-all"
 
@@ -40,4 +40,8 @@ def embed_docs(csv_file=CSV_FILE, max_docs=MAX_DOCS):
     return docs
 
 embedded_docs = embed_docs()
+
+for doc in embedded_docs:
+    doc.tensor = None
+
 embedded_docs.push(pushed_name)
