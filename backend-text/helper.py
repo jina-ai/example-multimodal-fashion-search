@@ -39,6 +39,7 @@ def csv_to_docarray(file_path=CSV_FILE, max_docs=100):
     return docs
 
 
+# Deprecated
 def input_docs_from_csv(file_path=CSV_FILE, max_docs=100, data_dir=DATA_DIR):
     docs = DocumentArray()
     import csv
