@@ -30,7 +30,7 @@ def process_doc(doc):
         return doc
 
     except:
-        del doc # delete if malformed csv entry
+        pass
 
 
 def csv_to_docarray(file_path=CSV_FILE, max_docs=100):
