@@ -27,7 +27,7 @@ with ZipFile(filename, "r") as zipfile:
     zipfile.extractall(".")
 
 print("- Deleting unused files to free up space")
-shutil.rmtree("mntradataset")
+shutil.rmtree("myntradataset")
 
 print("- Deleting zip file")
 os.remove(filename)
