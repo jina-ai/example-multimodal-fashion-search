@@ -1,3 +1,6 @@
+# This script creates embeddings for every Document and pushes the DocumentArray to the cloud
+# so other people can skip the slow embedding process and just pull embeddings directly via DocumentArray.pull()
+
 from jina import Flow
 from helper import input_docs_from_csv
 from config import DEVICE, CSV_FILE, TIMEOUT_READY
