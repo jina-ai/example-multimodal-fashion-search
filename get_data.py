@@ -18,9 +18,12 @@ if not os.path.isdir(data_dir):
 
 os.chdir(data_dir)
 
+print("- Downloading dataset")
 subprocess.run(["kaggle", "datasets", "download", dataset_name])
 
+print("- Unzipping dataset")
 with ZipFile(filename, "r") as zipfile:
     zipfile.extractall(".")
 
+print("- Deleting zip file")
 os.remove(filename)
