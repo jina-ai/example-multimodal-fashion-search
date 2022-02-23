@@ -22,13 +22,17 @@ def filter_good_rows(
 
     # Get fields
     with open(input_file, "r") as file:
-        fields = file.readlines()[0].split(",")
-        fields = [field.strip() for field in fields]
+        fields_string = file.readlines()[0]
+        fields_list = fields_string.split(",")
+        fields_list = [field.strip() for field in fields_list]
 
-    with open(input_file, "r") as in_file, open(output_file, "w") as out_file:
+    with open(output_file, "w") as file:
+        file.write(fields_string)
+
+    with open(input_file, "r") as in_file, open(output_file, "a") as out_file:
         reader = csv.DictReader(in_file)
 
-        writer = csv.DictWriter(out_file, fieldnames=fields)
+        writer = csv.DictWriter(out_file, fieldnames=fields_list)
         for row in reader:
             if len(row.keys()) == desired_field_count:
                 good_list.append(row)

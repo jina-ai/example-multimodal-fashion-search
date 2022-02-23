@@ -49,19 +49,16 @@ def input_docs_from_csv(file_path=CSV_FILE, max_docs=100, data_dir=DATA_DIR):
         reader = csv.DictReader(file)
 
         for row in islice(reader, max_docs):
-            try:  # To skip malformed rows
-                filename = f"{data_dir}/{row['id']}.jpg"
-                doc = Document(uri=filename, tags=row)
-                random.seed(int(doc.tags["id"]))  # Ensure reproducability
+            filename = f"{data_dir}/{row['id']}.jpg"
+            doc = Document(uri=filename, tags=row)
+            random.seed(int(doc.tags["id"]))  # Ensure reproducability
 
-                # Generate useful data that's missing
-                doc.tags["price"] = generate_price()  # Generate fake price
-                doc.tags["rating"] = random.randrange(0, 5)
+            # Generate useful data that's missing
+            doc.tags["price"] = generate_price()  # Generate fake price
+            doc.tags["rating"] = random.randrange(0, 5)
 
-                doc.load_uri_to_image_tensor()
-                docs.append(doc)
-            except:
-                pass
+            doc.load_uri_to_image_tensor()
+            docs.append(doc)
 
     return docs
 
