@@ -15,18 +15,22 @@ def remove_tensor(doc):
 
 
 def process_doc(doc):
-    filename = f"{DATA_DIR}/{doc.id}.jpg"
-    doc.uri = filename
+    try:
+        filename = f"{DATA_DIR}/{doc.id}.jpg"
+        doc.uri = filename
 
-    # Generate fake price
-    doc.tags["price"] = generate_price()
+        # Generate fake price
+        doc.tags["price"] = generate_price()
 
-    # Generate fake rating based on id
-    random.seed(int(doc.id))  # Ensure reproducability
-    doc.tags["rating"] = random.randrange(0, 5)
-    doc = doc.load_uri_to_image_tensor()
+        # Generate fake rating based on id
+        random.seed(int(doc.id))  # Ensure reproducability
+        doc.tags["rating"] = random.randrange(0, 5)
+        doc = doc.load_uri_to_image_tensor()
 
-    return doc
+        return doc
+
+    except:
+        del doc # delete if malformed csv entry
 
 
 def csv_to_docarray(file_path=CSV_FILE, max_docs=100):
