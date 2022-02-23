@@ -66,6 +66,7 @@ def index(csv_file=CSV_FILE, max_docs=MAX_DOCS):
             uses_with={"device": DEVICE},
             install_requirements=True,
             uses_metas={"timeout_ready": TIMEOUT_READY},
+            replicas=2,
         )
         .add(
             uses="jinahub://PQLiteIndexer/latest",
