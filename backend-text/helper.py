@@ -1,9 +1,6 @@
 from docarray import DocumentArray, Document
-from config import MAX_DOCS, SERVER, PORT, DATA_DIR, CSV_FILE
-from jina import Client
+from config import DATA_DIR, CSV_FILE
 import random
-
-search_terms = ("Dress", "Shirt", "Shoe")
 
 # Server
 def generate_price(minimum=10, maximum=200):
@@ -65,43 +62,3 @@ def get_columns(document):
     return columns
 
 
-# Client
-
-
-def get_matches(input, server=SERVER, port=PORT, limit=MAX_DOCS, filters=None):
-    from pprint import pprint
-    pprint(filters)
-    client = Client(host=server, protocol="http", port=port)
-    response = client.search(
-        Document(text=input),
-        return_results=True,
-        parameters={"limit": limit, "filter": filters},
-        show_progress=True,
-    )
-    matches = response[0].docs[0].matches
-    # for match in matches:
-        # print(match.id)
-        # print(match.tags["year"])
-        # print(match.tags.keys)
-
-    return matches
-
-
-def print_stars(rating, maximum=5):
-    rating = int(rating)
-    positive = "★"
-    negative = "☆"
-
-    string = rating * positive + (maximum - rating) * negative
-
-    return string
-
-
-def resize_image(filename, resize_factor=2):
-    from PIL import Image
-
-    image = Image.open(filename)
-    w, h = image.size
-    image = image.resize((w * resize_factor, h * resize_factor), Image.ANTIALIAS)
-
-    return image

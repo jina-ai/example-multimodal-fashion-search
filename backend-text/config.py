@@ -6,20 +6,9 @@ MAX_DOCS = 100
 DEVICE = "cpu"
 
 # PQLiteIndexer
-COLUMNS = [
-    ("gender", "str"),
-    ("masterCategory", "str"),
-    ("subCategory", "str"),
-    ("articleType", "str"),
-    ("baseColour", "str"),
-    ("season", "str"),
-    ("usage", "str"),
-    ("year", "int"),
-]
 DIMS = 512 # This should be same shape as vector embedding
 
 # serving via REST
-SERVER = "0.0.0.0" # remove http://
 PORT = 12345
 
 # metas for executors
