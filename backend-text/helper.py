@@ -31,7 +31,6 @@ def process_doc(doc):
 
 def csv_to_docarray(file_path=CSV_FILE, max_docs=100):
     docs = DocumentArray.from_csv(file_path, size=max_docs)
-    print([doc.id for doc in docs])
     docs.apply(process_doc)
 
     return docs
