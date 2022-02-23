@@ -2,6 +2,7 @@ import os
 import subprocess
 import sys
 from zipfile import ZipFile
+import shutil
 
 data_dir = "data"
 dataset_name = "paramaggarwal/fashion-product-images-small"
@@ -24,6 +25,9 @@ subprocess.run(["kaggle", "datasets", "download", dataset_name])
 print("- Unzipping dataset")
 with ZipFile(filename, "r") as zipfile:
     zipfile.extractall(".")
+
+print("- Deleting unused files to free up space")
+shutil.rmtree("mntradataset")
 
 print("- Deleting zip file")
 os.remove(filename)
