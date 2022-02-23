@@ -28,17 +28,17 @@ def embed_docs():
 
     return embedded_docs
 
-print("Creating initial docarray")
+print(f"Creating initial DocumentArray with maximum {MAX_DOCS}")
 docs = csv_to_docarray(file_path=CSV_FILE, max_docs=MAX_DOCS)
 
 # Create embeddings
-print("Embedding docs via Flow")
+print(f"Embedding {len(docs)} Documents via Flow")
 embedded_docs = embed_docs()
 
 # Remove tensors to save space
-print("Removing tensors to save space")
+print(f"Removing tensors from {len(embedded_docs)} Documents to save space")
 embedded_docs.apply(remove_tensor)
 
 # Push to cloud so others can download later
-print(f"Pushing to cloud with name {pushed_name}")
+print(f"Pushing {len(embedded_docs)} Documents to cloud with name {pushed_name}")
 embedded_docs.push(pushed_name)
