@@ -28,7 +28,7 @@ def embed_docs():
 
     return embedded_docs
 
-print(f"Creating initial DocumentArray with maximum {MAX_DOCS}")
+print(f"Creating initial DocumentArray with maximum {MAX_DOCS} Documents")
 docs = csv_to_docarray(file_path=CSV_FILE, max_docs=MAX_DOCS)
 
 # Create embeddings
