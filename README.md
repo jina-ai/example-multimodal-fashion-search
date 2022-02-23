@@ -14,14 +14,7 @@ The front-end is built in [Streamlit](https://streamlit.io/).
 
 ### Download data
 
-1. Download dataset from [Kaggle](https://www.kaggle.com/paramaggarwal/fashion-product-images-small) and extract
-2. Create a directory called `data`
-3. Ensure your `data` directory looks like:
-
-```data
-├── images
-└── styles.csv
-```
+Run `python get_data.py`
 
 ### Index data using `backend-text`
 
