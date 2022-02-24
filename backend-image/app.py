@@ -52,7 +52,7 @@ def search_grpc():
 @click.option(
     "--task",
     "-t",
-    type=click.Choice(["index", "search", "search_grpc"], case_sensitive=False),
+    type=click.Choice(["search", "search_grpc"], case_sensitive=False),
 )
 def main(task: str):
     if task == "search":
