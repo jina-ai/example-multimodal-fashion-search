@@ -42,6 +42,8 @@ You'll want to create your own `get_data.py` or some other way to process your d
 
 ### Create embeddings and index your data
 
+This will create embeddings for all images using CLIPImageEncoder, and then store them on disk (with metadata) with PQLiteIndexer.
+
 1. `cd indexer`
 2. `python app.py <number_of_docs_to_index>`
 
@@ -51,20 +53,21 @@ By default the number of docs to index is set to 99,999,999
 
 We have two backends:
 
-- Text-to-image: Input text, get images returned
-- Image-to-image: Input image, get images returned
+- [Text-to-image](./backend-text): Input text, get images returned
+- [Image-to-image](./backend-image): Input image, get images returned
 
 To run either or both of those:
 
 1. `cd ../backend-<format>` (where `<backend>` is `image` or `text`)
-2. `python app.py -t <task>` to start the search server(s) (where `<task>` is either `search` for a RESTful API or `search_grpc` to do a quick test search in the terminal)
+2. `python app.py -t <task>` to start the search server(s) (where `<task>` is either `search` for a RESTful API or `search_grpc` to do a quick test search in the terminal).
+
+> For RESTful interfaces, both backends use different ports so you can run both at once.
 
 ### Run frontend
 
 1. Open a new terminal window/tab, return to same directory
 2. `cd frontend`
-3. `pip install -r requirements.txt`
-4. `streamlit run frontend.py`
+3. `streamlit run frontend.py`
 
 ## With Docker-compose
 
