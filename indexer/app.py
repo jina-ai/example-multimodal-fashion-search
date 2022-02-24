@@ -1,0 +1,58 @@
+from jina import Flow
+from helper import get_columns, csv_to_docarray
+from config import DEVICE, MAX_DOCS, WORKSPACE_DIR, CSV_FILE, DIMS, TIMEOUT_READY
+import pickle
+import sys
+
+if DEVICE == "cuda":
+    gpu_bool = "-gpu"
+else:
+    gpu_bool = ""
+
+if len(sys.argv) == 1:
+    MAX_DOCS = sys.argv[1]
+
+def index(csv_file, max_docs):
+    docs = csv_to_docarray(file_path=csv_file, max_docs=max_docs)
+
+    # Get all the column info from first doc
+    columns = get_columns(docs[0])  
+
+    # Pickle values so search fn can pick up later
+    pickle.dump(
+        columns, open("../columns.p", "wb")
+    )  
+
+    flow = (
+        Flow()
+        .add(
+            uses=f"jinahub://CLIPImageEncoder/v0.4{gpu_bool}",
+            name="image_encoder",
+            uses_with={"device": DEVICE},
+            install_requirements=True,
+            uses_metas={"timeout_ready": TIMEOUT_READY},
+            replicas=2,
+        )
+        .add(
+            uses="jinahub://PQLiteIndexer/latest",
+            name="indexer",
+            uses_with={
+                "dim": DIMS,
+                "columns": columns,
+                "metric": "cosine",
+                "include_metadata": True,
+            },
+            uses_metas={"workspace": WORKSPACE_DIR},
+            volumes=f"./{WORKSPACE_DIR}:/workspace/workspace",
+            install_requirements=True,
+        )
+    )
+
+    with flow:
+        docs = flow.index(inputs=docs, show_progress=True, return_results=True)
+
+    print(f"Indexed {len(docs)} Documents")
+
+
+if __name__ == "__main__":
+    index(csv_file=CSV_FILE, max_docs=MAX_DOCS)
