@@ -140,4 +140,4 @@ if "matches" in locals():
         desc_cell.markdown(
             f"*{match.tags['masterCategory']}*, *{match.tags['subCategory']}*, *{match.tags['articleType']}*, *{match.tags['baseColour']}*, *{match.tags['season']}*, *{match.tags['usage']}*, *{match.tags['year']}*"
         )
-        price_cell.button(key=match.tags["id"], label=str(match.tags["price"]))
+        price_cell.button(key=match.id, label=str(match.tags["price"]))
