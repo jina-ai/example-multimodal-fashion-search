@@ -24,7 +24,6 @@ services:
     volumes:
       - ./backend-text:/workspace
       - ./embeddings:/embeddings
-      #- ./workspace:/workspace/workspace
       - ./data:/data
     restart: always
 
