@@ -4,7 +4,7 @@ from config import DEVICE, MAX_DOCS, WORKSPACE_DIR, PORT, DIMS
 import click
 import pickle
 
-columns = pickle.load(open("../columns.p", "rb"))
+columns = pickle.load(open("./columns.p", "rb"))
 
 # We only use one Flow for searching by image, since we already created our embeddings when we ran `app.py -t index` from `backend-text`
 

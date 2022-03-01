@@ -16,7 +16,7 @@ def index_from_cloud(dataset):
     # Pickle values so search fn can pick up later
     columns = get_columns(docs[0])  # Get all the column info from first doc
     pickle.dump(
-        columns, open("../columns.p", "wb")
+        columns, open("./columns.p", "wb")
     )  
 
     flow = (
@@ -46,7 +46,7 @@ def index(csv_file=CSV_FILE, max_docs=MAX_DOCS):
 
     columns = get_columns(docs[0])  # Get all the column info from first doc
     pickle.dump(
-        columns, open("../columns.p", "wb")
+        columns, open("./columns.p", "wb")
     )  # Pickle values so search fn can pick up later
 
     flow = (
@@ -79,7 +79,7 @@ def index(csv_file=CSV_FILE, max_docs=MAX_DOCS):
 
 
 def search():
-    columns = pickle.load(open("../columns.p", "rb"))
+    columns = pickle.load(open("./columns.p", "rb"))
     flow = (
         Flow(protocol="http", port_expose=PORT)
         .add(
@@ -108,7 +108,7 @@ def search():
 
 
 def search_grpc():
-    columns = pickle.load(open("../columns.p", "rb"))
+    columns = pickle.load(open("./columns.p", "rb"))
     flow = (
         Flow()
         .add(

@@ -4,7 +4,7 @@ FROM python:3.9-bullseye
 COPY . /workspace
 WORKDIR /workspace
 
-RUN pip install -r requirements.txt
+RUN pip install jina[client]==3.0.0 streamlit==1.2.0
 
 EXPOSE 8509
 
