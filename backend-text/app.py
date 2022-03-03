@@ -1,85 +1,18 @@
-from docarray import Document, DocumentArray
+from docarray import Document
 from jina import Flow
-from helper import input_docs_from_csv, get_columns
-from config import DEVICE, MAX_DOCS, WORKSPACE_DIR, PORT, CSV_FILE, DIMS, TIMEOUT_READY, DOCARRAY_PULL_NAME
+from config import DEVICE, MAX_DOCS, WORKSPACE_DIR, PORT, CSV_FILE, DIMS, DOCARRAY_PULL_NAME
 import click
-import pickle
+import json
 
 if DEVICE == "cuda":
     gpu_bool = "-gpu"
 else:
     gpu_bool = ""
 
-def index_from_cloud(dataset):
-    docs = DocumentArray.pull(dataset)
-
-    # Pickle values so search fn can pick up later
-    columns = get_columns(docs[0])  # Get all the column info from first doc
-    pickle.dump(
-        columns, open("./columns.p", "wb")
-    )  
-
-    flow = (
-        Flow()
-        .add(
-            uses="jinahub://PQLiteIndexer/latest",
-            name="indexer",
-            uses_with={
-                "dim": DIMS,
-                "columns": columns,
-                "metric": "cosine",
-                "include_metadata": True,
-            },
-            uses_metas={"workspace": WORKSPACE_DIR},
-            volumes=f"./{WORKSPACE_DIR}:/workspace/workspace",
-            install_requirements=True,
-        )
-    )
-
-    with flow:
-        docs = flow.index(inputs=docs, show_progress=True, return_results=True)
-
-
-
-def index(csv_file=CSV_FILE, max_docs=MAX_DOCS):
-    docs = input_docs_from_csv(file_path=csv_file, max_docs=max_docs)
-
-    columns = get_columns(docs[0])  # Get all the column info from first doc
-    pickle.dump(
-        columns, open("./columns.p", "wb")
-    )  # Pickle values so search fn can pick up later
-
-    flow = (
-        Flow()
-        .add(
-            uses=f"jinahub://CLIPImageEncoder/v0.4{gpu_bool}",
-            name="image_encoder",
-            uses_with={"device": DEVICE},
-            install_requirements=True,
-            uses_metas={"timeout_ready": TIMEOUT_READY},
-            replicas=2,
-        )
-        .add(
-            uses="jinahub://PQLiteIndexer/latest",
-            name="indexer",
-            uses_with={
-                "dim": DIMS,
-                "columns": columns,
-                "metric": "cosine",
-                "include_metadata": True,
-            },
-            uses_metas={"workspace": WORKSPACE_DIR},
-            volumes=f"./{WORKSPACE_DIR}:/workspace/workspace",
-            install_requirements=True,
-        )
-    )
-
-    with flow:
-        docs = flow.index(inputs=docs, show_progress=True, return_results=True)
-
+with open("columns.json", "rt") as file:
+    columns = json.load(file)
 
 def search():
-    columns = pickle.load(open("./columns.p", "rb"))
     flow = (
         Flow(protocol="http", port_expose=PORT)
         .add(
@@ -108,7 +41,6 @@ def search():
 
 
 def search_grpc():
-    columns = pickle.load(open("./columns.p", "rb"))
     flow = (
         Flow()
         .add(

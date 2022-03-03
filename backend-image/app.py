@@ -1,10 +1,11 @@
 from jina import Flow
 from docarray import Document
-from config import DEVICE, MAX_DOCS, WORKSPACE_DIR, PORT, DIMS
+from config import DEVICE, WORKSPACE_DIR, PORT, DIMS
 import click
-import pickle
+import json
 
-columns = pickle.load(open("./columns.p", "rb"))
+with open("columns.json", "rt") as file:
+    columns = json.load(file)
 
 # We only use one Flow for searching by image, since we already created our embeddings when we ran `app.py -t index` from `backend-text`
 

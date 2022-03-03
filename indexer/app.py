@@ -1,7 +1,7 @@
 from jina import Flow
 from helper import get_columns, csv_to_docarray
 from config import DEVICE, MAX_DOCS, WORKSPACE_DIR, CSV_FILE, DIMS, TIMEOUT_READY
-import pickle
+import json
 import sys
 
 if DEVICE == "cuda":
@@ -19,9 +19,8 @@ def index(csv_file, max_docs):
     columns = get_columns(docs[0])  
 
     # Pickle values so search fn can pick up later
-    pickle.dump(
-        columns, open("../columns.p", "wb")
-    )  
+    with open("columns.json", "w") as file:
+        json.dump(columns, file)
 
     flow = (
         Flow()
