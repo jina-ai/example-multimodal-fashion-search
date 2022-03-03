@@ -1,10 +1,10 @@
-FROM python:3.9-bullseye
+FROM jinaai/jina:3.0.0-py39-standard
 
 # setup the workspace
 COPY . /workspace
 WORKDIR /workspace
 
-RUN pip install jina[client]==3.0.0 streamlit==1.2.0
+RUN pip install streamlit==1.2.0
 
 EXPOSE 8509
 
