@@ -49,6 +49,10 @@ This will create embeddings for all images using CLIPImageEncoder, and then stor
 
 By default the number of docs to index is set to 99,999,999
 
+### Copy over columns
+
+After indexing you'll have a file called `columns.json` in your `indexer` directory. Copy this to the `backend-` directories you want to work with. This will let the user filter by things like price, color, year, etc (based on what options you present in your front-end). This will overwrite the existing `columns.json` file(s) which are the ones from the fashion search.
+
 ### Run search backends
 
 We have two backends:
