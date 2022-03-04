@@ -9,8 +9,12 @@ if DEVICE == "cuda":
 else:
     gpu_bool = ""
 
-if len(sys.argv) == 1:
+if len(sys.argv) == 2:
     MAX_DOCS = sys.argv[1]
+
+print(f"Indexing {MAX_DOCS} documents")
+import sys
+sys.exit()
 
 def index(csv_file, max_docs):
     docs = csv_to_docarray(file_path=csv_file, max_docs=max_docs)
