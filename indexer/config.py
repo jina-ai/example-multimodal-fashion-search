@@ -3,7 +3,7 @@ DOCARRAY_PULL_NAME = 'fashion-multimodal-all'
 DATA_DIR = "../data/images" # Where are the files?
 CSV_FILE = "../data/styles.csv" # Where's the metadata?
 WORKSPACE_DIR = "../embeddings"
-MAX_DOCS = 100
+MAX_DOCS = 99999999
 DEVICE = "cpu"
 
 # PQLiteIndexer

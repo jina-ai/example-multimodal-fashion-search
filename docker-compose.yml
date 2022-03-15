@@ -19,17 +19,20 @@ services:
 
   backend-text:
     build: backend-text
+    environment:
+      - IN_DOCKER=True
     ports:
       - 12345:12345
     volumes:
       - ./backend-text:/workspace
       - ./embeddings:/embeddings
-      #- ./workspace:/workspace/workspace
       - ./data:/data
     restart: always
 
   backend-image:
     build: backend-image
+    environment:
+      - IN_DOCKER=True
     ports:
       - 60000:60000
     volumes:

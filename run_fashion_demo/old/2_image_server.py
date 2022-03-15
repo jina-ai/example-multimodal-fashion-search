@@ -2,10 +2,9 @@ from jina import Flow
 from docarray import Document
 from config import DEVICE, WORKSPACE_DIR, PORT, DIMS
 import click
-import json
+import pickle
 
-with open("columns.json", "rt") as file:
-    columns = json.load(file)
+columns = pickle.load(open("../columns.p", "rb"))
 
 # We only use one Flow for searching by image, since we already created our embeddings when we ran `app.py -t index` from `backend-text`
 
@@ -53,7 +52,7 @@ def search_grpc():
 @click.option(
     "--task",
     "-t",
-    type=click.Choice(["search", "search_grpc"], case_sensitive=False),
+    type=click.Choice(["index", "search", "search_grpc"], case_sensitive=False),
 )
 def main(task: str):
     if task == "search":

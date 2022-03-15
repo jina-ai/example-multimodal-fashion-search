@@ -1,24 +1,26 @@
-from jina import Flow
 from docarray import Document
+from jina import Flow
 from config import DEVICE, WORKSPACE_DIR, PORT, DIMS
 import click
-import json
+import pickle
 
-with open("columns.json", "rt") as file:
-    columns = json.load(file)
+if DEVICE == "cuda":
+    gpu_bool = "-gpu"
+else:
+    gpu_bool = ""
 
-# We only use one Flow for searching by image, since we already created our embeddings when we ran `app.py -t index` from `backend-text`
+columns = pickle.load(open("../columns.p", "rb"))
 
 flow = (
-    Flow(port_expose=PORT, protocol="http")
+    Flow(protocol="http", port_expose=PORT)
     .add(
-        uses="jinahub://CLIPImageEncoder/",
+        uses=f"jinahub://CLIPTextEncoder/v0.2{gpu_bool}",
         name="text_encoder",
         uses_with={"device": DEVICE},
         install_requirements=True,
     )
     .add(
-        uses="jinahub://PQLiteIndexer/",
+        uses="jinahub://PQLiteIndexer/latest",
         name="indexer",
         uses_with={
             "dim": DIMS,
@@ -32,21 +34,15 @@ flow = (
     )
 )
 
-
 def search():
     with flow:
         flow.block()
 
 
 def search_grpc():
-
-    query_doc = Document(uri="../data/images/20000.jpg")
-    query_doc.load_uri_to_image_tensor()
-
     with flow:
-        response = flow.search(query_doc, return_result=True)
-
-    print([match.uri for match in response[0].matches])
+        response = flow.search(Document(text="shoes"), return_results=True)
+        print([match.uri for match in response[0].matches])
 
 
 @click.command()
