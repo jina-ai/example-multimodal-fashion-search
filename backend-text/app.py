@@ -75,13 +75,8 @@ def search_grpc():
     "-t",
     type=click.Choice(["index", "search", "search_grpc"], case_sensitive=False),
 )
-@click.option("--num_docs", "-n", default=MAX_DOCS)
-def main(task: str, num_docs: int):
-    if task == "index":
-        index(csv_file=CSV_FILE, max_docs=num_docs)
-    elif task == "index_from_cloud":
-        index_from_cloud(dataset=DOCARRAY_PULL_NAME)
-    elif task == "search":
+def main(task: str):
+    if task == "search":
         search()
     elif task == "search_grpc":
         search_grpc()
