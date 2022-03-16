@@ -35,6 +35,10 @@ def index(csv_file, max_docs):
             # replicas=2,
         )
         .add(
+            name="TensorDeleter",
+            uses="jinahub://TensorDeleter",
+        )
+        .add(
             uses="jinahub://PQLiteIndexer/latest",
             name="indexer",
             uses_with={
