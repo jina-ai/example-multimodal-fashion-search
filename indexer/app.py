@@ -27,8 +27,8 @@ def index(csv_file, max_docs):
     flow = (
         Flow()
         .add(
-            uses=f"jinahub://CLIPImageEncoder/v0.4{gpu_bool}",
-            name="image_encoder",
+            uses=f"jinahub://CLIPEncoder/v0.3.0{gpu_bool}",
+            name="encoder",
             uses_with={"device": DEVICE},
             install_requirements=True,
             uses_metas={"timeout_ready": TIMEOUT_READY},
