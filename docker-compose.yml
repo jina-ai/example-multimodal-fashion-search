@@ -4,39 +4,24 @@ services:
   frontend:
     build: frontend
     environment:
-      - TEXT_BACKEND_SERVER=backend-text
-      - IMAGE_BACKEND_SERVER=backend-image
+      - SERVER=searcher
       - DEBUG=False
     ports:
       - 8509:8509
     depends_on:
-      - backend-text
-      - backend-image
+      - searcher
     volumes:
       - ./frontend:/workspace
       - ./data:/data
     restart: always
 
-  backend-text:
-    build: backend-text
+  searcher:
+    build: searcher
     environment:
       - IN_DOCKER=True
     ports:
       - 12345:12345
     volumes:
-      - ./backend-text:/workspace
-      - ./embeddings:/embeddings
-      - ./data:/data
-    restart: always
-
-  backend-image:
-    build: backend-image
-    environment:
-      - IN_DOCKER=True
-    ports:
-      - 60000:60000
-    volumes:
-      - ./backend-image:/workspace
       - ./embeddings:/embeddings
       - ./data:/data
     restart: always
