@@ -4,8 +4,7 @@ services:
   frontend:
     build: frontend
     environment:
-      - TEXT_BACKEND_SERVER=searcher
-      - IMAGE_BACKEND_SERVER=searcher
+      - SERVER=searcher
       - DEBUG=False
     ports:
       - 8509:8509

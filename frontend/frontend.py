@@ -9,11 +9,9 @@ from helper import (
 from config import (
     TOP_K,
     IMAGE_RESIZE_FACTOR,
-    TEXT_IMAGE_SERVER,
-    TEXT_IMAGE_PORT,
+    SERVER,
+    PORT,
     DEBUG,
-    IMAGE_IMAGE_SERVER,
-    IMAGE_IMAGE_PORT,
 )
 
 filters = {
@@ -71,17 +69,15 @@ limit = st.sidebar.slider(
 
 if DEBUG:
     with st.sidebar.expander("Debug"):
-        text_server = st.text_input(label="Text server", value=TEXT_IMAGE_SERVER)
-        text_port = st.text_input(label="Text port", value=TEXT_IMAGE_PORT)
-        image_server = st.text_input(label="Image server", value=IMAGE_IMAGE_SERVER)
-        image_port = st.text_input(label="Image port", value=IMAGE_IMAGE_PORT)
+        server = st.text_input(label="Server", value=SERVER)
+        port = st.text_input(label="Port", value=PORT)
+        # text_server = st.text_input(label="Text server", value=SERVER)
+        # text_port = st.text_input(label="Text port", value=PORT)
+        # image_server = st.text_input(label="Image server", value=SERVER)
+        # image_port = st.text_input(label="Image port", value=PORT)
 else:
-    text_server = TEXT_IMAGE_SERVER
-    text_port = TEXT_IMAGE_PORT
-
-
-# season = st.sidebar.selectbox("Season", ["Summer", "Fall", "Winter", "Spring"])
-# use_hi_res = st.sidebar.checkbox(label="Show hi-res images") # WIP
+    server = SERVER
+    port = PORT
 
 st.sidebar.title("About")
 
@@ -110,8 +106,8 @@ if input_media == "text":
             input=text_query,
             limit=limit,
             filters=filters,
-            server=text_server,
-            port=text_port,
+            server=server,
+            port=port,
         )
         print(matches)
 
@@ -123,8 +119,8 @@ elif input_media == "image":
             input=image_query,
             limit=limit,
             filters=filters,
-            server=image_server,
-            port=image_port,
+            server=server,
+            port=port,
         )
 
 if "matches" in locals():

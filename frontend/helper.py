@@ -1,15 +1,13 @@
 from config import (
-    TEXT_IMAGE_SERVER,
-    TEXT_IMAGE_PORT,
+    SERVER,
+    PORT,
     TOP_K,
-    IMAGE_IMAGE_SERVER,
-    IMAGE_IMAGE_PORT,
 )
 from jina import Client, Document
 
 
 def get_matches(
-    input, server=TEXT_IMAGE_SERVER, port=TEXT_IMAGE_PORT, limit=TOP_K, filters=None
+    input, server=SERVER, port=PORT, limit=TOP_K, filters=None
 ):
     client = Client(host=server, protocol="http", port=port)
     response = client.search(
@@ -23,7 +21,7 @@ def get_matches(
 
 
 def get_matches_from_image(
-    input, server=IMAGE_IMAGE_SERVER, port=IMAGE_IMAGE_PORT, limit=TOP_K, filters=None
+    input, server=SERVER, port=PORT, limit=TOP_K, filters=None
 ):
     data = input.read()
     query_doc = Document(blob=data)
