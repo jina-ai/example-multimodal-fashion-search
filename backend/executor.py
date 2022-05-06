@@ -1,0 +1,1 @@
+/home/alexcg/work/repos/executors/executor-fashion-search-preprocessor/executor.py
