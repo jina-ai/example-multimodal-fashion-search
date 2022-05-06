@@ -1,23 +1,19 @@
 from jina import Flow
-from helper import get_columns, csv_to_docarray
-from config import DEVICE, MAX_DOCS, WORKSPACE_DIR, CSV_FILE, DIMS, TIMEOUT_READY
-from executor import FashionSearchPreprocessor
+from docarray import DocumentArray
+from helper import get_columns
+from config import MAX_DOCS, WORKSPACE_DIR, CSV_FILE, DIMS, TIMEOUT_READY
+# from executor import FashionSearchPreprocessor
 import json
-import sys
 import click
 
-if len(sys.argv) == 2:
-    MAX_DOCS = int(sys.argv[1])
-
+# Load existing column schema - needed for PQLiteIndexer
 with open("columns.json", "r") as file:
     columns = json.load(file)
 
 flow = (
-    Flow()
-    # .add(, name="preprocessor")
+    Flow(port_expose=12345, protocol="http")
     .add(
-        # uses=FashionSearchPreprocessor,
-        uses="jinahub://FashionSearchPreprocessor",
+        uses="jinahub://FashionSearchPreprocessor/v0.3",
         name="preprocessor",
         uses_with={"data_dir": "../data/images/"},
     )
@@ -37,8 +33,8 @@ flow = (
         uses_with={
             "dim": DIMS,
             "columns": columns,
-            "metric": "cosine",
-            "include_metadata": True,
+            # "metric": "cosine",
+            # "include_metadata": True,
         },
         uses_metas={"workspace": WORKSPACE_DIR},
         volumes=f"./{WORKSPACE_DIR}:/workspace/workspace",
@@ -49,22 +45,26 @@ flow = (
 
 def index(csv_file, num_docs):
     print(f"Indexing {num_docs} documents")
-    docs = csv_to_docarray(file_path=csv_file, max_docs=num_docs)
+    docs = DocumentArray.from_csv(csv_file, size=num_docs)
 
+    # Commented code doesn't really work since doesn't pull metadata that is created by FashionSearchPreprocessor
     # Get all the column info from first doc
-    columns = get_columns(docs[0])
+    # columns = get_columns(docs[0])
 
     # Pickle values so search fn can pick up later
-    with open("columns.json", "w") as file:
-        json.dump(columns, file)
+    # with open("columns.json", "w") as file:
+        # json.dump(columns, file)
 
     with flow:
         docs = flow.index(inputs=docs, show_progress=True, return_results=True)
 
-    print(f"Indexed {len(docs)} Documents")
+    docs.summary()
 
 
-def search():
+def serve():
+    """
+    Open RESTful front-end for searching or indexing
+    """
     with flow:
         flow.block()
 
@@ -73,16 +73,16 @@ def search():
 @click.option(
     "--task",
     "-t",
-    type=click.Choice(["index", "search", "search_grpc"], case_sensitive=False),
+    type=click.Choice(["index", "serve"], case_sensitive=False),
 )
 @click.option("--num_docs", "-n", default=MAX_DOCS)
 def main(task: str, num_docs):
     if task == "index":
         index(CSV_FILE, num_docs=num_docs)
-    elif task == "search":
-        search()
+    elif task == "serve":
+        serve()
     else:
-        print("Please add '-t index' or '-t search' to your command")
+        print("Please add '-t index' or '-t serve' to your command")
 
 
 if __name__ == "__main__":
