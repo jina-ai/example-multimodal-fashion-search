@@ -25,8 +25,6 @@ def get_matches_from_image(
 ):
     data = input.read()
     query_doc = Document(blob=data)
-    query_doc.convert_blob_to_image_tensor()
-    query_doc.set_image_tensor_shape((80, 60))
 
     client = Client(host=server, protocol="http", port=port)
     response = client.search(

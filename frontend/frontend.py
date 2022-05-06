@@ -109,7 +109,6 @@ if input_media == "text":
             server=server,
             port=port,
         )
-        print(matches)
 
 elif input_media == "image":
     image_query = st.file_uploader(label="Image file")

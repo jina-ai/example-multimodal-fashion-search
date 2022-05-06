@@ -2,7 +2,7 @@ from jina import Flow
 from docarray import DocumentArray
 from helper import get_columns
 from config import MAX_DOCS, WORKSPACE_DIR, CSV_FILE, DIMS, TIMEOUT_READY
-# from executor import FashionSearchPreprocessor
+from executor import FashionSearchPreprocessor
 import json
 import click
 
@@ -13,9 +13,15 @@ with open("columns.json", "r") as file:
 flow = (
     Flow(port_expose=12345, protocol="http")
     .add(
-        uses="jinahub://FashionSearchPreprocessor/v0.3",
+        # uses=FashionSearchPreprocessor,
+        uses="jinahub://FashionSearchPreprocessor/v0.4",
         name="preprocessor",
-        uses_with={"data_dir": "../data/images/"},
+        uses_with={
+            "data_dir": "../data/images/",
+            "tensor_shape": (80, 60),
+            "rating_range": (0, 5),
+            "price_range": (0, 200),
+        },
     )
     .add(
         uses="jinahub://CLIPEncoder/v0.3.0",
@@ -53,7 +59,7 @@ def index(csv_file, num_docs):
 
     # Pickle values so search fn can pick up later
     # with open("columns.json", "w") as file:
-        # json.dump(columns, file)
+    # json.dump(columns, file)
 
     with flow:
         docs = flow.index(inputs=docs, show_progress=True, return_results=True)
