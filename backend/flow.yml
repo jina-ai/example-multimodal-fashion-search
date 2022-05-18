@@ -1,0 +1,35 @@
+jtype: Flow
+with:
+  protocol: http
+  port: 12345
+executors:
+  - name: preprocessor
+    uses: jinahub://FashionSearchPreprocessor/v0.4
+    uses_with:
+      data_dir: ../data/images
+  - name: encoder
+    uses: jinahub://CLIPEncoder
+    resources:
+      memory: 8G
+  - name: tensor_deleter
+    uses: jinahub://TensorDeleter
+  - name: indexer
+    uses: jinahub://PQLiteIndexer
+    uses_with:
+      dim: 512
+      metric: cosine
+      include_metadata: true
+      columns:
+        - ['year', 'int']
+        - ['productDisplayName', 'str']
+        - ['usage', 'str']
+        - ['subCategory', 'str']
+        - ['masterCategory', 'str']
+        - ['articleType', 'str']
+        - ['season', 'str']
+        - ['baseColour', 'str']
+        - ['gender', 'str']
+        - ['price', 'int']
+        - ['rating', 'int']
+    uses_metas:
+      workspace: workspace

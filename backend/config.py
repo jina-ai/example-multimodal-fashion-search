@@ -15,3 +15,6 @@ PORT = 12345
 
 # metas for executors
 TIMEOUT_READY = -1 # Wait forever for executor to be ready. Good for slow connections
+
+# cloud
+CLOUD_HOST = "https://d9fb6bd828.wolf.jina.ai"
