@@ -11,71 +11,56 @@ Multimodal search lets you use one type of data (in this case, text) to search a
 
 The front-end is built in [Streamlit](https://streamlit.io/).
 
-## What do you want to do?
+## Play with the search engine now
 
-Your instructions will be different based on whether you want to:
+We've got a [live demo](https://examples.jina.ai/fashion) for you to play with.
 
-- Just run the demo on your own machine - this pulls a pre-indexed DocumentArray from the cloud so you don't need to index anything. You just need to build an index and search the pre-existing data.
-- Adapt the demo for your own dataset - in this case, you'll want to index your own data and then search that
+## Run the fashion search engine yourself
 
-## Run fashion demo
+There are multiple ways you can run this:
 
-1. `pip install -r requirements.txt`
-2. `cd run_fashion_demo`
-3. `python create_index.py` to pull the pre-embedded DocumentArray from the cloud and create an index (this saves you having to do compute-heavy embedding locally)
-4. `cd ../searcher`
-5. `python app.py -t search` to start the search server
-6. `cd ../frontend`
-7. `streamlit run frontend.py` to start the front-end in your web browser
+- Deploy on [JCloud](https://github.com/jina-ai/jcloud/)
+- Run with Docker-Compose
+- Run on bare metal
 
-> If you see any filenames starting with `x_` then they're just something we use internally to build the initial DocumentArray or other tasks the end user doesn't need to worry about. But they're there for your reference if you want them.
+### First steps
 
-## Adapt the demo for your own needs
+- **Clone this repo**: `git clone https://github.com/jina-ai/example-multimodal-fashion-search.git`
+- **Download data**: `python ./get_data.py`
 
-### Setup
+### Run on JCloud
 
-`pip install -r requirements.txt`
+JCloud lets you run the fashion backend Jina Flow on the cloud, without having to use your own compute.
 
-### Download and clean up data
+```sh
+pip install jcloud
+cd backend
+jc login
+jc deploy jcloud
+```
 
-You'll want to create your own `get_data.py` or some other way to process your dataset. We tend to keep all dataset processing code in a file like this since processing logic varies from dataset to dataset. In fashion search's [`get_data.py`](./run_fashion_demo/x_get_data.py) we're cleaning up a CSV file to prevent malformed rows causing trouble later on.
+After that you can use [Jina Client](https://docs.jina.ai/fundamentals/flow/client/#connect-client-to-a-flow) to connect and search/index your data.
 
-### Create embeddings and index your data
+### Run with Docker-Compose
 
-This will create embeddings for all images using CLIPImageEncoder, and then store them on disk (with metadata) with PQLiteIndexer.
+This will spin up both the backend and front-end. Note: You will have to index data before you can search for it.
 
-1. `cd indexer`
-2. `python app.py <number_of_docs_to_index>`
+```sh
+docker-compose up
+```
 
-By default the number of docs to index is set to 99,999,999
+### Run on bare metal
 
-### Copy over columns
+```sh
+pip install -r requirements.txt
+```
 
-After indexing you'll have a file called `columns.json` in your `indexer` directory. Copy this to the `backend-` directories you want to work with. This will let the user filter by things like price, color, year, etc (based on what options you present in your front-end). This will overwrite the existing `columns.json` file(s) which are the ones from the fashion search.
+Then, in `backend`:
 
-### Run search backend
+- **Build your index**: `python app.py -t index -n 1000 # index 1000 images`
+- **Open up RESTful interface for searching/indexing**: `python app.py -t serve`
 
-From the repo's root directory:
-
-1. `cd searcher`
-2. `python app.py -t <task>` to start the search server(s)
-
-`<task>` can be one of:
-
-- `search`: Open up a RESTful interface for searching. Defaults to port 12345
-- `test_text` - Submit a sample text query and return `uri`s of results
-- `test_image` - Submit a sample image query and return `uri`s of results
-
-### Run frontend
-
-1. Open a new terminal window/tab, return to same directory
-2. `cd frontend`
-3. `streamlit run frontend.py`
-
-## With Docker-compose
-
-1. First index the data as stated above
-2. In the repo's root directory, run `docker-compose up` 
+To open the frontend, go to the `frontend` directory and run `streamlit run frontend.py`
 
 ## Tips
 
