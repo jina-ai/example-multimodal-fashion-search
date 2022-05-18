@@ -6,6 +6,6 @@ WORKDIR /workspace
 
 RUN apt-get update && apt-get install --no-install-recommends -y git build-essential g++
 
-ENTRYPOINT ["python", "app.py", "-t", "search"]
+ENTRYPOINT ["python", "app.py", "-t", "serve"]
 
 EXPOSE 12345

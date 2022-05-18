@@ -10,7 +10,11 @@ DEVICE = "cpu"
 DIMS = 512 # This should be same shape as vector embedding
 
 # serving via REST
+HOST = "http://0.0.0.0"
 PORT = 12345
 
 # metas for executors
 TIMEOUT_READY = -1 # Wait forever for executor to be ready. Good for slow connections
+
+# cloud
+CLOUD_HOST = "https://d9fb6bd828.wolf.jina.ai"
