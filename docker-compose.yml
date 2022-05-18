@@ -22,6 +22,5 @@ services:
     ports:
       - 12345:12345
     volumes:
-      - ./embeddings:/embeddings
       - ./data:/data
     restart: always
