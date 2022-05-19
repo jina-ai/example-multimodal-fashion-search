@@ -9,5 +9,6 @@ IMAGE_RESIZE_FACTOR = 3
 DEBUG = True
 
 # serving via REST
-SERVER = os.getenv("SERVER", "0.0.0.0")
-PORT = 12345
+IMAGE_ROOT_URL = "https://examples.jina.ai/data/fashion/images/" # where are the image files?
+SERVER = os.getenv("SERVER", "https://0df596d980.wolf.jina.ai")
+# PORT = 12345

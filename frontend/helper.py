@@ -1,15 +1,10 @@
-from config import (
-    SERVER,
-    PORT,
-    TOP_K,
-)
+from config import SERVER, TOP_K
 from jina import Client, Document
 
 
-def get_matches(
-    input, server=SERVER, port=PORT, limit=TOP_K, filters=None
-):
-    client = Client(host=server, protocol="http", port=port)
+def get_matches(input, server=SERVER, limit=TOP_K, filters=None):
+    print(f"Server: {server}")
+    client = Client(host=server)
     response = client.search(
         Document(text=input),
         return_results=True,
@@ -20,13 +15,25 @@ def get_matches(
     return response[0].matches
 
 
-def get_matches_from_image(
-    input, server=SERVER, port=PORT, limit=TOP_K, filters=None
-):
+# def get_matches(
+# input, server=SERVER, port=PORT, limit=TOP_K, filters=None
+# ):
+# client = Client(host=server, protocol="http", port=port)
+# response = client.search(
+# Document(text=input),
+# return_results=True,
+# parameters={"limit": limit, "filter": filters},
+# show_progress=True,
+# )
+
+# return response[0].matches
+
+
+def get_matches_from_image(input, server=SERVER, limit=TOP_K, filters=None):
     data = input.read()
     query_doc = Document(blob=data)
 
-    client = Client(host=server, protocol="http", port=port)
+    client = Client(host=server)
     response = client.search(
         query_doc,
         return_results=True,
@@ -47,14 +54,14 @@ def print_stars(rating, maximum=5):
     return string
 
 
-def resize_image(filename, resize_factor=2):
-    from PIL import Image
+# def resize_image(filename, resize_factor=2):
+# from PIL import Image
 
-    image = Image.open(filename)
-    w, h = image.size
-    image = image.resize((w * resize_factor, h * resize_factor), Image.ANTIALIAS)
+# image = Image.open(filename)
+# w, h = image.size
+# image = image.resize((w * resize_factor, h * resize_factor), Image.ANTIALIAS)
 
-    return image
+# return image
 
 
 class facets:

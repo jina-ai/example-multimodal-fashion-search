@@ -1,18 +1,11 @@
 import streamlit as st
 from helper import (
     get_matches,
-    resize_image,
     print_stars,
     get_matches_from_image,
     facets,
 )
-from config import (
-    TOP_K,
-    IMAGE_RESIZE_FACTOR,
-    SERVER,
-    PORT,
-    DEBUG,
-)
+from config import TOP_K, SERVER, DEBUG
 
 filters = {
     "$and": {
@@ -47,8 +40,8 @@ filters["$and"]["season"]["$in"] = st.sidebar.multiselect(
     "Season", facets.season, default=facets.season
 )
 # (
-    # filters["$and"]["price"]["$gte"],
-    # filters["$and"]["price"]["$lte"],
+# filters["$and"]["price"]["$gte"],
+# filters["$and"]["price"]["$lte"],
 # ) = st.sidebar.slider("Price", 0, 200, (0, 200))
 
 filters["$and"]["rating"]["$gte"] = st.sidebar.slider("Minimum rating", 0, 5, 0)
@@ -70,14 +63,8 @@ limit = st.sidebar.slider(
 if DEBUG:
     with st.sidebar.expander("Debug"):
         server = st.text_input(label="Server", value=SERVER)
-        port = st.text_input(label="Port", value=PORT)
-        # text_server = st.text_input(label="Text server", value=SERVER)
-        # text_port = st.text_input(label="Text port", value=PORT)
-        # image_server = st.text_input(label="Image server", value=SERVER)
-        # image_port = st.text_input(label="Image port", value=PORT)
 else:
     server = SERVER
-    port = PORT
 
 st.sidebar.title("About")
 
@@ -92,7 +79,7 @@ To speed up indexing, we indexed relatively low-resolution graphics. We're looki
 )
 
 st.sidebar.markdown(
-    "[Repo link](https://github.com/alexcg1/jina-multimodal-fashion-search)"
+    "[Repo link](https://github.com/jina-ai/jina-multimodal-fashion-search)"
 )
 
 # Main area
@@ -107,7 +94,6 @@ if input_media == "text":
             limit=limit,
             filters=filters,
             server=server,
-            port=port,
         )
 
 elif input_media == "image":
@@ -119,16 +105,12 @@ elif input_media == "image":
             limit=limit,
             filters=filters,
             server=server,
-            port=port,
         )
 
 if "matches" in locals():
     for match in matches:
         pic_cell, desc_cell, price_cell = st.columns([1, 6, 1])
-
-        image = resize_image(match.uri, resize_factor=IMAGE_RESIZE_FACTOR)
-
-        pic_cell.image(image, use_column_width="auto")
+        pic_cell.image(match.tags["image_url"])
         desc_cell.markdown(
             f"##### {match.tags['productDisplayName']} {print_stars(match.tags['rating'])}"
         )
