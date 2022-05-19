@@ -1,1 +1,0 @@
-[["productDisplayName", "str"], ["baseColour", "str"], ["gender", "str"], ["season", "str"], ["masterCategory", "str"], ["subCategory", "str"], ["usage", "str"], ["articleType", "str"], ["year", "int"], ["price", "int"], ["rating", "int"]]
