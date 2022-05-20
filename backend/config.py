@@ -17,4 +17,5 @@ PORT = 12345
 TIMEOUT_READY = -1 # Wait forever for executor to be ready. Good for slow connections
 
 # cloud
-CLOUD_HOST = "https://d9fb6bd828.wolf.jina.ai"
+CLOUD_HOST = "https://0df596d980.wolf.jina.ai"
+IMAGE_ROOT_URL = "https://examples.jina.ai/data/fashion/images/" # where are the image files?

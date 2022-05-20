@@ -1,4 +1,5 @@
 from jina import Executor
+from config import IMAGE_ROOT_URL
 from executor import FashionSearchPreprocessor
 
 
@@ -32,6 +33,14 @@ def get_columns(document):
 def process_docs(docs):
     preproc = FashionSearchPreprocessor()
     preproc.process_index_document(docs)
+    for doc in docs:
+        add_image_url(doc)
+
+
+def add_image_url(doc):
+    filename = doc.uri.split("/")[-1]
+    doc.tags["image_url"] = f"{IMAGE_ROOT_URL}{filename}"
+
 
 
 def print_results(docs, show_summary=True, show_matches=True, **kwargs):
