@@ -1,9 +1,8 @@
 jtype: Flow
 with:
   protocol: http
+  cors: true
 executors:
-  #- name: preprocessor
-    #uses: FashionSearchPreprocessor
   - name: encoder
     uses: jinahub+docker://CLIPEncoder
     resources:
@@ -12,8 +11,6 @@ executors:
     uses: jinahub+docker://TensorDeleter
   - name: indexer
     uses: jinahub+docker://PQLiteIndexer
-    #uses_requests:
-      #"/update": "/index"
     uses_with:
       dim: 512
       metric: cosine
