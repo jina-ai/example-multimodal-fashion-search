@@ -1,46 +1,25 @@
-from jina import Executor
 from config import IMAGE_ROOT_URL
 from executor import FashionSearchPreprocessor
-
-
-def get_columns(document):
-    """
-    Return a list of tuples, each tuple containing column name and type
-    """
-    # tags = document.tags.to_dict()
-    tags = document.tags
-    names = list(tags.keys())
-    types = list(tags.values())
-    columns = []
-
-    for field, value in zip(names, types):
-        try:
-            value = int(value)  # Handle year better
-        except:
-            pass
-
-        if isinstance(value, str):
-            value = "str"
-        elif isinstance(value, int):
-            value = "int"
-
-        col = (field, value)
-        columns.append(col)
-
-    return columns
+import os
 
 
 def process_docs(docs):
+
     preproc = FashionSearchPreprocessor()
     preproc.process_index_document(docs)
+
+    # Some rows in our CSV may contain refs to files that don't exist. Let's remove those Documents
     for doc in docs:
-        add_image_url(doc)
+        if os.path.isfile(doc.uri):
+            add_image_url(doc)
+        else:
+            print(f"{doc.uri} can't be found. Removing")
+            del docs[doc.id]
 
 
 def add_image_url(doc):
     filename = doc.uri.split("/")[-1]
     doc.tags["image_url"] = f"{IMAGE_ROOT_URL}{filename}"
-
 
 
 def print_results(docs, show_summary=True, show_matches=True, **kwargs):

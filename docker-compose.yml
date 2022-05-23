@@ -4,15 +4,13 @@ services:
   frontend:
     build: frontend
     environment:
-      - SERVER=backend
-      - DEBUG=False
+      - SERVER="https://0df596d980.wolf.jina.ai"
     ports:
       - 8509:8509
     depends_on:
       - backend
     volumes:
       - ./frontend:/workspace
-      - ./data:/data
     restart: always
 
   backend:
