@@ -4,7 +4,7 @@ services:
   frontend:
     build: frontend
     environment:
-      - SERVER="https://0df596d980.wolf.jina.ai"
+      - SERVER="grpc://0.0.0.0:12345"
     ports:
       - 8509:8509
     depends_on:
