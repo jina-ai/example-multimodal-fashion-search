@@ -1,4 +1,4 @@
-FROM jinaai/jina:3.4.4-py39-standard
+FROM jinaai/jina:3.6.2-py39-standard
 
 # setup the workspace
 COPY . /workspace
