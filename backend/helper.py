@@ -17,9 +17,12 @@ def process_docs(docs):
             del docs[doc.id]
 
 
+
 def add_image_url(doc):
     filename = doc.uri.split("/")[-1]
+    doc.convert_uri_to_datauri()
     doc.tags["image_url"] = f"{IMAGE_ROOT_URL}{filename}"
+    doc.tags["data_uri"] = doc.uri
 
 
 def print_results(docs, show_summary=True, show_matches=True, **kwargs):

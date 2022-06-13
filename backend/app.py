@@ -1,19 +1,66 @@
 from jina import Flow, Client
+from executor import FashionSearchPreprocessor
 from docarray import DocumentArray, Document
 from helper import process_docs, print_results
-from config import MAX_DOCS, CSV_FILE, CLOUD_HOST
+from config import MAX_DOCS, CSV_FILE, CLOUD_HOST, WORKSPACE_DIR
 import click
 
-flow = Flow.load_config("flow.yml")
+# flow = Flow.load_config("flow.yml")
+
+flow = (
+    Flow(port=12345)
+    .add(
+        uses="jinahub://FashionSearchPreprocessor/v0.6",
+        uses_with={
+            "data_dir": "../data/images/",
+            "tensor_shape": (80, 60),
+            "rating_range": (0, 5),
+            "price_range": (0, 200),
+        },
+        install_requirements=True,
+    )
+    .add(uses="jinahub://CLIPEncoder/", name="encoder", install_requirements=True)
+    .add(
+        uses="jinahub://AnnLiteIndexer/",
+        name="indexer",
+        uses_with={
+            "dim": 512,
+            "metric": "cosine",
+            "include_metadata": True,
+            "columns": [
+                ["year", "int"],
+                ["productDisplayName", "str"],
+                ["usage", "str"],
+                ["subCategory", "str"],
+                ["masterCategory", "str"],
+                ["articleType", "str"],
+                ["season", "str"],
+                ["baseColour", "str"],
+                ["gender", "str"],
+                ["price", "int"],
+                ["rating", "int"],
+            ],
+        },
+        # uses_metas={"workspace": WORKSPACE_DIR},
+        install_requirements=True,
+    )
+)
 
 
 def index(csv_file, num_docs):
     print(f"Indexing {num_docs} documents")
     docs = DocumentArray.from_csv(csv_file, size=num_docs)
+    for doc in docs:
+        print(doc.uri)
+
+    print(docs)
 
     with flow:
         docs = flow.index(inputs=docs, show_progress=True, return_results=True)
 
+    for doc in docs:
+        print(doc.uri)
+        print(doc.tags)
     print_results(docs, show_matches=False)
 
 
