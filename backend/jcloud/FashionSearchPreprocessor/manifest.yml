@@ -1,5 +1,0 @@
-manifest_version: 1
-name: FashionSearchPreprocessor
-description: "Normalize, resize, add metadata for fashion Documents"
-url: https://github.com/alexcg1/executor-fashion-search-preprocessor
-keywords: [images, fashion, example, preprocessor]

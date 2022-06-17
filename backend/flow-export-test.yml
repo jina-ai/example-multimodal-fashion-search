@@ -1,0 +1,59 @@
+!Flow
+version: '1'
+with:
+  protocol: http
+  port: 12345
+  extra_search_paths:
+  - ''
+executors:
+- name: preprocessor
+  polling: "ANY"
+  uses: jinahub://FashionSearchPreprocessor/v0.4
+  uses_with:
+    data_dir: ../data/images
+  port: 57608
+  upload_files: []
+- name: encoder
+  polling: "ANY"
+  uses: jinahub://CLIPEncoder
+  port: 52667
+  upload_files: []
+- name: tensor_deleter
+  polling: "ANY"
+  uses: jinahub://TensorDeleter
+  port: 59690
+  upload_files: []
+- name: indexer
+  polling: "ANY"
+  uses: jinahub://PQLiteIndexer
+  uses_with:
+    dim: 512
+    metric: cosine
+    include_metadata: true
+    columns:
+    - - year
+      - int
+    - - productDisplayName
+      - str
+    - - usage
+      - str
+    - - subCategory
+      - str
+    - - masterCategory
+      - str
+    - - articleType
+      - str
+    - - season
+      - str
+    - - baseColour
+      - str
+    - - gender
+      - str
+    - - price
+      - int
+    - - rating
+      - int
+  uses_metas:
+    workspace: workspace
+  port: 50321
+  upload_files: []

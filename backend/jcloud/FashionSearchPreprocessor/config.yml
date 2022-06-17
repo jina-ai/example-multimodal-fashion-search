@@ -1,4 +1,0 @@
-jtype: FashionSearchPreprocessor
-metas:
-  py_modules:
-    - executor.py

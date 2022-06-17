@@ -1,18 +1,16 @@
 jtype: Flow
 with:
-  protocol: grpc
+  protocol: http
+  cors: true
 executors:
   - name: encoder
-    uses: jinahub+docker://CLIPEncoder/
-    #replicas: 2
-    #resources:
-      #memory: 8G
-  #- name: tensor_deleter
-    #uses: jinahub+docker://TensorDeleter
+    uses: jinahub+docker://CLIPEncoder/v0.3.0
+    resources:
+      memory: 8G
+  - name: tensor_deleter
+    uses: jinahub+docker://TensorDeleter
   - name: indexer
-    uses: jinahub://AnnLiteIndexer/
-    #resources:
-      #memory: 8G
+    uses: jinahub+docker://AnnLiteIndexer/0.3.0
     uses_with:
       dim: 512
       metric: cosine
@@ -31,5 +29,3 @@ executors:
         - ['rating', 'int']
     uses_metas:
       workspace: workspace
-    jcloud:
-      capacity: on-demand

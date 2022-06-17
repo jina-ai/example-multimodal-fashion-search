@@ -15,53 +15,22 @@ The front-end is built in [Streamlit](https://streamlit.io/).
 
 We've got a [live demo](https://examples.jina.ai/fashion) for you to play with.
 
-## Run the fashion search engine yourself
+## Run on JCloud
 
-There are multiple ways you can run this:
+If you want to deploy to JCloud yourself:
 
-- Deploy on [JCloud](https://github.com/jina-ai/jcloud/)
-- Run with Docker-Compose
-- Run on bare metal
+- `pip install jcloud`
+- Login: `jc login`
+- Deploy: `jc deploy backend/jcloud/flow.yml`
+- Make a note of your server information
 
-### First steps
+### Index data
 
-- **Clone this repo**: `git clone https://github.com/jina-ai/example-multimodal-fashion-search.git`
-- **Download data**: `python ./get_data.py`
+- Edit `CLOUD_HOST` in `backend/config.py` to match the server info above
+- Download data: `python ./get_data.py`
+- Index: `python app.py -t cloud_index -n <300>` where 300 is the number of docs you wish to index
 
-### Run on JCloud
+### Search in front-end
 
-JCloud lets you run the fashion backend Jina Flow on the cloud, without having to use your own compute.
-
-```sh
-pip install jcloud
-cd backend
-jc login
-jc deploy jcloud
-```
-
-After that you can use [Jina Client](https://docs.jina.ai/fundamentals/flow/client/#connect-client-to-a-flow) to connect and search/index your data.
-
-### Run with Docker-Compose
-
-This will spin up both the backend and front-end. Note: You will have to index data before you can search for it.
-
-```sh
-docker-compose up
-```
-
-### Run on bare metal
-
-```sh
-pip install -r requirements.txt
-```
-
-Then, in `backend`:
-
-- **Build your index**: `python app.py -t index -n 1000 # index 1000 images`
-- **Open up RESTful interface for searching/indexing**: `python app.py -t serve`
-
-To open the frontend, go to the `frontend` directory and run `streamlit run frontend.py`
-
-## Tips
-
-- Index using the [small dataset](https://www.kaggle.com/paramaggarwal/fashion-product-images-small), then swap out the data directory for that of the [hi-res dataset](https://www.kaggle.com/paramaggarwal/fashion-product-images-dataset) for nicer-looking results.
+- Edit `docker-compose-jcloud.yml` to reflect server info
+- Start frontend: `docker-compose -f docker-compose-jcloud.yml up`

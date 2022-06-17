@@ -1,0 +1,13 @@
+version: "3.7"
+
+services:
+  frontend:
+    build: frontend
+    environment:
+      - SERVER=grpcs://fash-2ef056cc3d.wolf.jina.ai
+    ports:
+      - 8509:8509
+    volumes:
+      - ./frontend:/workspace
+    restart: always
+

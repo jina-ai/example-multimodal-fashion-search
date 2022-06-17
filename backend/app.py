@@ -1,5 +1,5 @@
 from jina import Flow, Client
-from executor import FashionSearchPreprocessor
+# from executor import FashionSearchPreprocessor
 from docarray import DocumentArray, Document
 from helper import process_docs, print_results
 from config import MAX_DOCS, CSV_FILE, CLOUD_HOST, WORKSPACE_DIR

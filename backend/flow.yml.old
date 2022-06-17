@@ -1,18 +1,20 @@
 jtype: Flow
 with:
-  protocol: grpc
+  protocol: http
+  port: 12345
 executors:
+  - name: preprocessor
+    uses: jinahub://FashionSearchPreprocessor/v0.4
+    uses_with:
+      data_dir: ../data/images
   - name: encoder
-    uses: jinahub+docker://CLIPEncoder/
-    #replicas: 2
-    #resources:
-      #memory: 8G
-  #- name: tensor_deleter
-    #uses: jinahub+docker://TensorDeleter
+    uses: jinahub://CLIPEncoder
+    resources:
+      memory: 8G
+  - name: tensor_deleter
+    uses: jinahub://TensorDeleter
   - name: indexer
-    uses: jinahub://AnnLiteIndexer/
-    #resources:
-      #memory: 8G
+    uses: jinahub://PQLiteIndexer
     uses_with:
       dim: 512
       metric: cosine
@@ -31,5 +33,3 @@ executors:
         - ['rating', 'int']
     uses_metas:
       workspace: workspace
-    jcloud:
-      capacity: on-demand

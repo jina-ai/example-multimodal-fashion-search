@@ -4,11 +4,11 @@ services:
   frontend:
     build: frontend
     environment:
-      - SERVER="grpc://0.0.0.0:12345"
+      - SERVER=backend
     ports:
       - 8509:8509
-    depends_on:
-      - backend
+    #depends_on:
+      #- backend
     volumes:
       - ./frontend:/workspace
     restart: always
