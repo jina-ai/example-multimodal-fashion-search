@@ -1,7 +1,7 @@
 jtype: Flow
 with:
   protocol: http
-  port: 12345
+  #port: 12345
 executors:
   - name: preprocessor
     uses: jinahub://FashionSearchPreprocessor/v0.4
@@ -13,27 +13,27 @@ executors:
     install_requirements: true
     resources:
       memory: 8G
-  - name: tensor_deleter
-    uses: jinahub://TensorDeleter
-    install_requirements: true
-  - name: indexer
-    uses: jinahub://PQLiteIndexer
-    uses_with:
-      dim: 512
-      metric: cosine
-      include_metadata: true
-      columns:
-        - ['year', 'int']
-        - ['productDisplayName', 'str']
-        - ['usage', 'str']
-        - ['subCategory', 'str']
-        - ['masterCategory', 'str']
-        - ['articleType', 'str']
-        - ['season', 'str']
-        - ['baseColour', 'str']
-        - ['gender', 'str']
-        - ['price', 'int']
-        - ['rating', 'int']
-    uses_metas:
-      workspace: workspace
-    install_requirements: true
+  #- name: tensor_deleter
+    #uses: jinahub://TensorDeleter
+    #install_requirements: true
+  #- name: indexer
+    #uses: jinahub://AnnLiteIndexer
+    #uses_with:
+      #dim: 512
+      #metric: cosine
+      #include_metadata: true
+      #columns:
+        #- ['year', 'int']
+        #- ['productDisplayName', 'str']
+        #- ['usage', 'str']
+        #- ['subCategory', 'str']
+        #- ['masterCategory', 'str']
+        #- ['articleType', 'str']
+        #- ['season', 'str']
+        #- ['baseColour', 'str']
+        #- ['gender', 'str']
+        #- ['price', 'int']
+        #- ['rating', 'int']
+    #uses_metas:
+      #workspace: workspace
+    #install_requirements: true
