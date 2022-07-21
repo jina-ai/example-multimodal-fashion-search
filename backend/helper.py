@@ -1,5 +1,5 @@
 from config import IMAGE_ROOT_URL
-from executor import FashionSearchPreprocessor
+from executors import FashionSearchPreprocessor
 import os
 
 
