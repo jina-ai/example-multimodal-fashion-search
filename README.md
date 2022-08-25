@@ -43,7 +43,11 @@ After that you can use [Jina Client](https://docs.jina.ai/fundamentals/flow/clie
 
 ### Run with Docker-Compose
 
-This will spin up both the backend and front-end. Note: You will have to index data before you can search for it.
+This will spin up:
+
+- Indexer: saves embeddings and metadata to `/backend/workspace`. You can tweak how many Documents to index in `docker-compose.yml`. You can also comment out the `backend-index` section in `docker-compose.yml` if you've already indexed and don't want to re-index.
+- Searcher: searches the embeddings/metadata stored on disk
+- Frontend: Streamlit frontend to make user experience easier
 
 ```sh
 docker-compose up
@@ -64,4 +68,4 @@ To open the frontend, go to the `frontend` directory and run `streamlit run fron
 
 ## Tips
 
-- Index using the [small dataset](https://www.kaggle.com/paramaggarwal/fashion-product-images-small), then swap out the data directory for that of the [hi-res dataset](https://www.kaggle.com/paramaggarwal/fashion-product-images-dataset) for nicer-looking results.
+- Index using the [small dataset](https://www.kaggle.com/paramaggarwal/fashion-product-images-small), then swap out the `data` directory for that of the [hi-res dataset](https://www.kaggle.com/paramaggarwal/fashion-product-images-dataset) for nicer-looking results.
