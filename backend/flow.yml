@@ -3,20 +3,20 @@ with:
   protocol: http
   port: 12345
 executors:
-  - name: preprocessor
+  - name: index_preprocessor
     uses: jinahub://FashionSearchPreprocessor/v0.4
     uses_with:
       data_dir: ../data/images
     install_requirements: true
-  - name: encoder
+  - name: all_encoder
     uses: jinahub://CLIPEncoder
     install_requirements: true
     resources:
       memory: 8G
-  - name: tensor_deleter
+  - name: index_tensor_deleter
     uses: jinahub://TensorDeleter
     install_requirements: true
-  - name: indexer
+  - name: all_indexer
     uses: jinahub://PQLiteIndexer
     uses_with:
       dim: 512

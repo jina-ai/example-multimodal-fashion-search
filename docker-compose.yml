@@ -1,6 +1,29 @@
 version: "3.7"
 
 services:
+  backend-index:
+    build:
+      context: backend
+      dockerfile: Dockerfile.index
+      args:
+        MAX_DOCS: 5  # how many documents to index
+    volumes:
+      - ./data:/data
+      - ./backend:/workspace
+
+  backend-search:
+    build:
+      context: backend
+      dockerfile: Dockerfile.search
+    ports:
+      - 12345:12345
+    depends_on:
+      - backend-index
+    volumes:
+      - ./data:/data
+      - ./backend:/workspace
+    restart: always
+
   frontend:
     build: frontend
     environment:
@@ -8,17 +31,8 @@ services:
     ports:
       - 8509:8509
     depends_on:
-      - backend
+      - backend-search
     volumes:
       - ./frontend:/workspace
     restart: always
 
-  backend:
-    build: backend
-    environment:
-      - IN_DOCKER=True
-    ports:
-      - 12345:12345
-    volumes:
-      - ./data:/data
-    restart: always

@@ -33,7 +33,6 @@ def cloud_search(host):
 
     print_results(response)
 
-
 def serve():
     """
     Open RESTful front-end for searching or indexing
@@ -47,19 +46,21 @@ def serve():
     "--task",
     "-t",
     type=click.Choice(
-        ["index", "serve", "cloud_index", "cloud_search"], case_sensitive=False
+        ["index", "serve", "cloud_index", "cloud_search", "wait"], case_sensitive=False
     ),
 )
 @click.option("--num_docs", "-n", default=MAX_DOCS)
 def main(task: str, num_docs):
     if task == "index":
-        index(CSV_FILE, num_docs=num_docs)
+        index(CSV_FILE, num_docs=int(num_docs))
     elif task == "cloud_index":
-        cloud_index(host=CLOUD_HOST, csv_file=CSV_FILE, num_docs=num_docs)
+        cloud_index(host=CLOUD_HOST, csv_file=CSV_FILE, num_docs=int(num_docs))
     elif task == "cloud_search":
         cloud_search(host=CLOUD_HOST)
     elif task == "serve":
         serve()
+    elif task == "wait":
+        wait()
     else:
         print("Please add '-t index' or '-t serve' to your command")
 

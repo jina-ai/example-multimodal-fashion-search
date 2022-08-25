@@ -1,4 +1,7 @@
-FROM jinaai/jina:3.4.4-py39-standard
+FROM jinaai/jina:3.7.14-standard
+
+ARG MAX_DOCS
+ENV MAX_DOCS $MAX_DOCS
 
 # setup the workspace
 COPY . /workspace
@@ -6,6 +9,6 @@ WORKDIR /workspace
 
 RUN apt-get update && apt-get install --no-install-recommends -y git build-essential g++
 
-ENTRYPOINT ["python", "app.py", "-t", "serve"]
+ENTRYPOINT python app.py -t index -n $MAX_DOCS
 
 EXPOSE 12345
