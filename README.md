@@ -69,3 +69,12 @@ To open the frontend, go to the `frontend` directory and run `streamlit run fron
 ## Tips
 
 - Index using the [small dataset](https://www.kaggle.com/paramaggarwal/fashion-product-images-small), then swap out the `data` directory for that of the [hi-res dataset](https://www.kaggle.com/paramaggarwal/fashion-product-images-dataset) for nicer-looking results.
+
+## Troubleshooting
+
+### I get the error `stacks: "sqlite3.IntegrityError: UNIQUE constraint failed: table_0._doc_id\n"`
+
+This is because you're trying to index data that's already been indexed. The database we use has a `UNIQUE` constraint that means it won't index duplicate data. You can fix this by:
+
+- Deleting `backend/workspace` (this will delete your entire index)
+- Commenting out the `backend-index` section from `docker-compose.yml`
