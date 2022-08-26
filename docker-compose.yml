@@ -1,15 +1,15 @@
 version: "3.7"
 
 services:
-  backend-index:
-    build:
-      context: backend
-      dockerfile: Dockerfile.index
-      args:
-        MAX_DOCS: 5  # how many documents to index
-    volumes:
-      - ./data:/data
-      - ./backend:/workspace
+  #backend-index:
+    #build:
+      #context: backend
+      #dockerfile: Dockerfile.index
+      #args:
+        #MAX_DOCS: 5  # how many documents to index
+    #volumes:
+      #- ./data:/data
+      #- ./backend:/workspace
 
   backend-search:
     build:
@@ -17,8 +17,6 @@ services:
       dockerfile: Dockerfile.search
     ports:
       - 12345:12345
-    depends_on:
-      - backend-index
     volumes:
       - ./data:/data
       - ./backend:/workspace
@@ -27,12 +25,12 @@ services:
   frontend:
     build: frontend
     environment:
-      - SERVER="https://0df596d980.wolf.jina.ai"
+      - SERVER=http://backend-search:12345
     ports:
       - 8509:8509
     depends_on:
       - backend-search
     volumes:
       - ./frontend:/workspace
+      - ./data:/data
     restart: always
-
