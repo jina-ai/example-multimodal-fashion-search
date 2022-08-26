@@ -1,15 +1,15 @@
 version: "3.7"
 
 services:
-  #backend-index:
-    #build:
-      #context: backend
-      #dockerfile: Dockerfile.index
-      #args:
-        #MAX_DOCS: 5  # how many documents to index
-    #volumes:
-      #- ./data:/data
-      #- ./backend:/workspace
+  backend-index:
+    build:
+      context: backend
+      dockerfile: Dockerfile.index
+      args:
+        MAX_DOCS: 99999999  # how many documents to index
+    volumes:
+      - ./data:/data
+      - ./backend:/workspace
 
   backend-search:
     build:
