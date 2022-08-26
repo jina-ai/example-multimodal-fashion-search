@@ -110,7 +110,7 @@ elif input_media == "image":
 if "matches" in locals():
     for match in matches:
         pic_cell, desc_cell, price_cell = st.columns([1, 6, 1])
-        pic_cell.image(match.tags["image_url"])
+        pic_cell.image(match.uri)
         desc_cell.markdown(
             f"##### {match.tags['productDisplayName']} {print_stars(match.tags['rating'])}"
         )

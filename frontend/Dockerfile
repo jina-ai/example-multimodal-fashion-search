@@ -1,9 +1,9 @@
-FROM jinaai/jina:3.4.4-py39-standard
+FROM jinaai/jina:3.7.14-standard
 
 COPY . /workspace
 WORKDIR /workspace
 
-RUN pip install streamlit==1.9.0
+RUN pip install streamlit==1.12.0
 
 EXPOSE 8509
 

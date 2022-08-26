@@ -10,6 +10,7 @@ def get_matches(input, server=SERVER, limit=TOP_K, filters=None):
         return_results=True,
         parameters={"limit": limit, "filter": filters},
         show_progress=True,
+        target_executor="(search_*|all_*)"
     )
 
     return response[0].matches
